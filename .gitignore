@@ -1,0 +1,64 @@
+## Build results
+bin/
+obj/
+out/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## OS-specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+## VS Code
+.vscode/
+
+## Rider
+.idea/
+*.sln.iml
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+
+## Logs
+*.log
+
+## dotCover
+.idea/
+*.dotCover
+
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+## Others
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.resharper
+*.vs/
+.vsconfig
+
+## Test results
+TestResults/
+*.TestResults/
+
+## Coverage reports
+coverage/
+*.coverage
+*.coveragexml
+*.covreport
+
+## Entity Framework
+Migrations/
+
+## Global.json SDK resolution cache
+global.json.cache/
