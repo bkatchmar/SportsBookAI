@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D4DFE4B5-19E9-4FFF-A92C-1D6560425AED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsBookAI.EntryConsole", "src\SportsBookAI.EntryConsole\SportsBookAI.EntryConsole.csproj", "{57A2683A-1F27-42C1-AD94-69E4C61A98EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57A2683A-1F27-42C1-AD94-69E4C61A98EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57A2683A-1F27-42C1-AD94-69E4C61A98EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57A2683A-1F27-42C1-AD94-69E4C61A98EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57A2683A-1F27-42C1-AD94-69E4C61A98EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{57A2683A-1F27-42C1-AD94-69E4C61A98EE} = {D4DFE4B5-19E9-4FFF-A92C-1D6560425AED}
+	EndGlobalSection
+EndGlobal
