@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D4DFE4B5-19E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsBookAI.EntryConsole", "src\SportsBookAI.EntryConsole\SportsBookAI.EntryConsole.csproj", "{57A2683A-1F27-42C1-AD94-69E4C61A98EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsBookAI.Core", "src\SportsBookAI.Core\SportsBookAI.Core.csproj", "{F20863D1-D9C0-412D-BE8C-1268DDC0144C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +22,13 @@ Global
 		{57A2683A-1F27-42C1-AD94-69E4C61A98EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57A2683A-1F27-42C1-AD94-69E4C61A98EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57A2683A-1F27-42C1-AD94-69E4C61A98EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F20863D1-D9C0-412D-BE8C-1268DDC0144C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F20863D1-D9C0-412D-BE8C-1268DDC0144C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F20863D1-D9C0-412D-BE8C-1268DDC0144C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F20863D1-D9C0-412D-BE8C-1268DDC0144C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{57A2683A-1F27-42C1-AD94-69E4C61A98EE} = {D4DFE4B5-19E9-4FFF-A92C-1D6560425AED}
+		{F20863D1-D9C0-412D-BE8C-1268DDC0144C} = {D4DFE4B5-19E9-4FFF-A92C-1D6560425AED}
 	EndGlobalSection
 EndGlobal

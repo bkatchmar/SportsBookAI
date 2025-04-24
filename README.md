@@ -16,8 +16,11 @@ dotnet new globaljson --sdk-version 8.0.408
 dotnet new sln -n SportsBookAI
 
 mkdir -p src/SportsBookAI.EntryConsole
+mkdir -p src/SportsBookAI.Core
 
 dotnet new console -n SportsBookAI.EntryConsole -o src/SportsBookAI.EntryConsole
+dotnet new classlib -n SportsBookAI.Core -o src/SportsBookAI.Core
 
 dotnet sln add src/SportsBookAI.EntryConsole/SportsBookAI.EntryConsole.csproj
+dotnet sln add src/SportsBookAI.Core/SportsBookAI.Core.csproj
 ```
