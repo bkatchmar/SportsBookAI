@@ -17,10 +17,14 @@ dotnet new sln -n SportsBookAI
 
 mkdir -p src/SportsBookAI.EntryConsole
 mkdir -p src/SportsBookAI.Core
+mkdir -p tests/SportsBookAI.Core.Tests
 
 dotnet new console -n SportsBookAI.EntryConsole -o src/SportsBookAI.EntryConsole
 dotnet new classlib -n SportsBookAI.Core -o src/SportsBookAI.Core
+dotnet new xunit -n SportsBookAI.Core.Tests -o tests/SportsBookAI.Core.Tests
 
 dotnet sln add src/SportsBookAI.EntryConsole/SportsBookAI.EntryConsole.csproj
 dotnet sln add src/SportsBookAI.Core/SportsBookAI.Core.csproj
+dotnet sln add tests/SportsBookAI.Core.Tests/SportsBookAI.Core.Tests.csproj
+dotnet add tests/SportsBookAI.Core.Tests/SportsBookAI.Core.Tests.csproj reference src/SportsBookAI.Core/SportsBookAI.Core.csproj
 ```
