@@ -30,4 +30,7 @@ dotnet sln add src/SportsBookAI.Core/SportsBookAI.Core.csproj
 dotnet sln add tests/SportsBookAI.Core.Tests/SportsBookAI.Core.Tests.csproj
 dotnet add tests/SportsBookAI.Core.Tests/SportsBookAI.Core.Tests.csproj reference src/SportsBookAI.Core/SportsBookAI.Core.csproj
 dotnet sln add src/SportsBookAI.Core.Mongo/SportsBookAI.Core.Mongo.csproj
+dotnet add src/SportsBookAI.Core.Mongo/SportsBookAI.Core.Mongo.csproj reference src/SportsBookAI.Core/SportsBookAI.Core.csproj
+dotnet add src/SportsBookAI.EntryConsole/SportsBookAI.EntryConsole.csproj reference src/SportsBookAI.Core/SportsBookAI.Core.csproj
+dotnet add src/SportsBookAI.EntryConsole/SportsBookAI.EntryConsole.csproj reference src/SportsBookAI.Core.Mongo/SportsBookAI.Core.Mongo.csproj
 ```

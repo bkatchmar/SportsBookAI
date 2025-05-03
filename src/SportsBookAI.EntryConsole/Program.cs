@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SportsBookAI.Core.Mongo;
 using SportsBookAI.EntryConsole.SettingsModels;
 
 // Program Start
@@ -11,5 +12,24 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
 AppSetting? mainSetting = configuration.GetSection("MainSetting").Get<AppSetting>();
 
 Console.WriteLine("Getting high level settings");
-Console.WriteLine($"Targetted Database: {mainSetting?.CurrentConnection}");
-Console.Write($"Total Connections: {mainSetting?.Connections.Count}");
+
+// Use the currently selection connection and do the necessary setup
+switch (mainSetting?.CurrentConnection)
+{
+    case "MongoDB":
+        Connection? mongoConnection = mainSetting?.Connections.FirstOrDefault(conn => conn.Key == mainSetting?.CurrentConnection);
+        if (mongoConnection != null)
+        {
+            ConnectionDetails.ConnectionString = mongoConnection.ConnectionString;
+            Console.WriteLine("Mongo Connection Set");
+        }
+        else
+        {
+            Console.WriteLine("Mongo Connection Not Set - Check Your Appsettings File");
+        }
+        break;
+    default:
+        break;
+}
+
+// Connection set, ready to roll out!

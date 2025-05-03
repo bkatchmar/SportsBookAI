@@ -14,4 +14,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SportsBookAI.Core\SportsBookAI.Core.csproj" />
+    <ProjectReference Include="..\SportsBookAI.Core.Mongo\SportsBookAI.Core.Mongo.csproj" />
+  </ItemGroup>
+
 </Project>

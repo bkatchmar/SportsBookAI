@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Base\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SportsBookAI.Core\SportsBookAI.Core.csproj" />
+  </ItemGroup>
+
 </Project>
