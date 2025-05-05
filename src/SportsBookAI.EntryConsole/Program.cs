@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo;
 using SportsBookAI.Core.Mongo.Repositories;
@@ -61,6 +62,8 @@ if (reposByLeague.Count > 0)
         Console.WriteLine("");
         Console.WriteLine($"Stored {allOverUnderMarks.Count} Over Under Records");
         Console.WriteLine("");
+        Console.WriteLine("JSON STRING");
+        Console.WriteLine(JsonConvert.SerializeObject(allTeams, Formatting.None));
         Console.WriteLine("===========\n");
     }
 }
