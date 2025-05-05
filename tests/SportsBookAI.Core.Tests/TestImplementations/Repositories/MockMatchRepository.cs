@@ -48,6 +48,53 @@ public class MockMatchRepository(IRepository<ITeam> TeamRepo) : IRepository<IMat
         return [];
     }
 
+    public Task<IList<IMatch>> GetAllAsync()
+    {
+        ITeam? newYork = TeamRepo.GetById(1);
+        ITeam? boston = TeamRepo.GetById(2);
+        ITeam? miami = TeamRepo.GetById(3);
+        ITeam? losAngeles = TeamRepo.GetById(4);
+        ITeam? denver = TeamRepo.GetById(5);
+        ITeam? seattle = TeamRepo.GetById(6);
+
+        List<IMatch> rtnVal = new();
+
+        if (newYork != null && boston != null && miami != null && losAngeles != null && denver != null && seattle != null)
+        {
+            rtnVal.AddRange( 
+            [
+                new MockMatch
+                {
+                    ID = 1,
+                    MatchDateTimeLocal = new DateTime(2025, 4, 29, 13, 0, 0), // Local time: April 29, 2025 at 13:00
+                    MatchDateTimeUTC = new DateTime(2025, 4, 29, 17, 0, 0, DateTimeKind.Utc), // UTC time: April 29, 2025 at 17:00
+                    HomeTeam = newYork,
+                    AwayTeam = miami
+                },
+                new MockMatch
+                {
+                    ID = 2,
+                    MatchDateTimeLocal = new DateTime(2025, 4, 27, 17, 0, 0), // Local time: April 27, 2025 at 17:00
+                    MatchDateTimeUTC = new DateTime(2025, 4, 27, 21, 0, 0, DateTimeKind.Utc), // UTC time: April 27, 2025 at 21:00
+                    HomeTeam = losAngeles,
+                    AwayTeam = boston
+                },
+                new MockMatch
+                {
+                    ID = 3,
+                    MatchDateTimeLocal = new DateTime(2025, 5, 2, 14, 0, 0), // Local time: May 2, 2025 at 14:00
+                    MatchDateTimeUTC = new DateTime(2025, 5, 2, 18, 0, 0, DateTimeKind.Utc), // UTC time: May 2, 2025 at 18:00
+                    HomeTeam = denver,
+                    AwayTeam = seattle
+                }
+            ]);
+        }
+
+        // Why this works instead of just `return Task.FromResult(rtnVal);` I have no idea
+        IList<IMatch> fromInterface = rtnVal;
+        return Task.FromResult(fromInterface);
+    }
+
     public IMatch? GetById(dynamic ObjectId)
     {
         try

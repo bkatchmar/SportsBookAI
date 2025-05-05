@@ -27,7 +27,8 @@ switch (mainSetting?.CurrentConnection)
             ConnectionDetails.ConnectionString = mongoConnection.ConnectionString;
             foreach (string league in mainSetting.Leagues)
             {
-                reposByLeague.Add(league, new MongoSportsBookRepository(league));
+                MongoSportsBookRepository repo = new(league);
+                reposByLeague.Add(league, repo);
             }
             Console.WriteLine("Mongo Connection Set\n");
         }
@@ -46,16 +47,29 @@ if (reposByLeague.Count > 0)
     foreach (KeyValuePair<string, ISportsBookRepository> repos in reposByLeague)
     {
         Console.WriteLine($"League = {repos.Key}\n");
-        IList<ITeam> allTeams = repos.Value.TeamRepository.GetAll();
-        Console.WriteLine($"{repos.Key} Has {allTeams.Count} Teams");
+        IList<ITeam> allTeams = await repos.Value.TeamRepository.GetAllAsync();
+        IList<IMatch> allMatches = await repos.Value.MatchRepository.GetAllAsync();
+        Console.WriteLine($"{repos.Key} Has {allTeams.Count} Teams\n");
         foreach (ITeam team in allTeams)
         {
             Console.WriteLine(team);
         }
+        Console.WriteLine("");
+        Console.WriteLine($"Stored {allMatches.Count} Matches");
+        Console.WriteLine("");
         Console.WriteLine("===========\n");
     }
 }
 else
 {
     Console.WriteLine("Error when setting the main sportsbook repo");
+}
+
+// Run needed disposing
+foreach (KeyValuePair<string, ISportsBookRepository> repos in reposByLeague)
+{
+    if (repos.Value is IDisposable obj)
+    {
+        obj.Dispose();
+    }
 }
