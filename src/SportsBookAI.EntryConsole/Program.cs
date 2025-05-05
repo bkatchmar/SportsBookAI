@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo;
+using SportsBookAI.Core.Mongo.Repositories;
 using SportsBookAI.EntryConsole.SettingsModels;
 
 // Program Start
@@ -14,6 +16,8 @@ AppSetting? mainSetting = configuration.GetSection("MainSetting").Get<AppSetting
 Console.WriteLine("Getting high level settings");
 
 // Use the currently selection connection and do the necessary setup
+ISportsBookRepository? primarySportsBookRepo = null;
+
 switch (mainSetting?.CurrentConnection)
 {
     case "MongoDB":
@@ -21,6 +25,7 @@ switch (mainSetting?.CurrentConnection)
         if (mongoConnection != null)
         {
             ConnectionDetails.ConnectionString = mongoConnection.ConnectionString;
+            primarySportsBookRepo = new MongoSportsBookRepository("UFL");
             Console.WriteLine("Mongo Connection Set");
         }
         else
@@ -33,3 +38,16 @@ switch (mainSetting?.CurrentConnection)
 }
 
 // Connection set, ready to roll out!
+if (primarySportsBookRepo != null)
+{
+    IList<ITeam> allTeams = primarySportsBookRepo.TeamRepository.GetAll();
+    Console.WriteLine($"UFL Has {allTeams.Count} Teams");
+    foreach (ITeam team in allTeams)
+    {
+        Console.WriteLine(team);
+    }
+}
+else
+{
+    Console.WriteLine("Error when setting the main sportsbook repo");
+}

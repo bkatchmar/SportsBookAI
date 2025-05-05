@@ -14,6 +14,7 @@ public class MockTeamRepository : IRepository<ITeam>
         new MockTeam { ID = 6, TeamName = "Seattle Thunder", Conference = "Western", Division = null }
     ];
     public IList<ITeam> GetAll() => _allTeamsInRepo;
+    public Task<IList<ITeam>> GetAllAsync() => Task.FromResult(_allTeamsInRepo);
     public ITeam? GetById(dynamic ObjectId)
     {
         try
