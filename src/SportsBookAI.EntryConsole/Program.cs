@@ -49,6 +49,7 @@ if (reposByLeague.Count > 0)
         Console.WriteLine($"League = {repos.Key}\n");
         IList<ITeam> allTeams = await repos.Value.TeamRepository.GetAllAsync();
         IList<IMatch> allMatches = await repos.Value.MatchRepository.GetAllAsync();
+        IList<IOverUnder> allOverUnderMarks = await repos.Value.OverUnderRepository.GetAllAsync();
         Console.WriteLine($"{repos.Key} Has {allTeams.Count} Teams\n");
         foreach (ITeam team in allTeams)
         {
@@ -56,6 +57,9 @@ if (reposByLeague.Count > 0)
         }
         Console.WriteLine("");
         Console.WriteLine($"Stored {allMatches.Count} Matches");
+        Console.WriteLine("");
+        Console.WriteLine("");
+        Console.WriteLine($"Stored {allOverUnderMarks.Count} Over Under Records");
         Console.WriteLine("");
         Console.WriteLine("===========\n");
     }
