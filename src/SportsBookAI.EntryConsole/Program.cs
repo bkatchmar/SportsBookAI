@@ -63,7 +63,7 @@ if (reposByLeague.Count > 0)
         Console.WriteLine($"Stored {allOverUnderMarks.Count} Over Under Records");
         Console.WriteLine("");
         Console.WriteLine("JSON STRING");
-        Console.WriteLine(JsonConvert.SerializeObject(allTeams, Formatting.None));
+        Console.WriteLine(JsonConvert.SerializeObject(allMatches, Formatting.None));
         Console.WriteLine("===========\n");
     }
 }
