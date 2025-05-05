@@ -13,24 +13,27 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
 // Read MongoDB settings from configuration
 AppSetting? mainSetting = configuration.GetSection("MainSetting").Get<AppSetting>();
 
-Console.WriteLine("Getting high level settings");
+Console.WriteLine("Getting high level settings\n");
 
 // Use the currently selection connection and do the necessary setup
-ISportsBookRepository? primarySportsBookRepo = null;
+Dictionary<string, ISportsBookRepository> reposByLeague = [];
 
 switch (mainSetting?.CurrentConnection)
 {
     case "MongoDB":
         Connection? mongoConnection = mainSetting?.Connections.FirstOrDefault(conn => conn.Key == mainSetting?.CurrentConnection);
-        if (mongoConnection != null)
+        if (mongoConnection != null && mainSetting != null)
         {
             ConnectionDetails.ConnectionString = mongoConnection.ConnectionString;
-            primarySportsBookRepo = new MongoSportsBookRepository("UFL");
-            Console.WriteLine("Mongo Connection Set");
+            foreach (string league in mainSetting.Leagues)
+            {
+                reposByLeague.Add(league, new MongoSportsBookRepository(league));
+            }
+            Console.WriteLine("Mongo Connection Set\n");
         }
         else
         {
-            Console.WriteLine("Mongo Connection Not Set - Check Your Appsettings File");
+            Console.WriteLine("Mongo Connection Not Set - Check Your Appsettings File\n");
         }
         break;
     default:
@@ -38,13 +41,18 @@ switch (mainSetting?.CurrentConnection)
 }
 
 // Connection set, ready to roll out!
-if (primarySportsBookRepo != null)
+if (reposByLeague.Count > 0)
 {
-    IList<ITeam> allTeams = primarySportsBookRepo.TeamRepository.GetAll();
-    Console.WriteLine($"UFL Has {allTeams.Count} Teams");
-    foreach (ITeam team in allTeams)
+    foreach (KeyValuePair<string, ISportsBookRepository> repos in reposByLeague)
     {
-        Console.WriteLine(team);
+        Console.WriteLine($"League = {repos.Key}\n");
+        IList<ITeam> allTeams = repos.Value.TeamRepository.GetAll();
+        Console.WriteLine($"{repos.Key} Has {allTeams.Count} Teams");
+        foreach (ITeam team in allTeams)
+        {
+            Console.WriteLine(team);
+        }
+        Console.WriteLine("===========\n");
     }
 }
 else

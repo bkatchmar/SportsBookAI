@@ -68,7 +68,7 @@ public class MongoTeamRepository : IRepository<ITeam>, IDisposable
         if (!_allTeams.Any())
         {
             IMongoCollection<MongoTeam> teamCollection = _database.GetCollection<MongoTeam>("teams");
-            _allTeams = teamCollection.Find(_ => true).ToList();
+            _allTeams = teamCollection.Find(_ => true).SortBy(team => team.TeamName).ToList();
         }
     }
 
@@ -77,7 +77,7 @@ public class MongoTeamRepository : IRepository<ITeam>, IDisposable
         if (!_allTeams.Any())
         {
             IMongoCollection<MongoTeam> teamCollection = _database.GetCollection<MongoTeam>("teams");
-            _allTeams = await teamCollection.Find(_ => true).ToListAsync();
+            _allTeams = await teamCollection.Find(_ => true).SortBy(team => team.TeamName).ToListAsync();
         }
     }
 }
