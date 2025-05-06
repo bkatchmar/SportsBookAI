@@ -18,7 +18,7 @@ public class UflExampleTests
     public void GetAllUflDataPoints()
     {
          Assert.Equal(8, superRepo.TeamRepository.GetAll().Count);
-         Assert.Equal(24, superRepo.MatchRepository.GetAll().Count);
+         Assert.Equal(28, superRepo.MatchRepository.GetAll().Count);
          Assert.Equal(24, superRepo.OverUnderRepository.GetAll().Count);
     }
 
@@ -45,5 +45,29 @@ public class UflExampleTests
         Assert.Contains(4, baseAggregatorForTestUflData.TotalUniqueUnders);
         Assert.Contains(3, baseAggregatorForTestUflData.TotalUniqueUnders);
         Assert.Contains(2, baseAggregatorForTestUflData.TotalUniqueUnders);
+    }
+
+    [Fact]
+    public void GeneratePreidctionsOverWeekSevenMatches()
+    {
+        IAggregator baseAggregatorForTestUflData = new BaseAggregator("UFL", superRepo);
+        baseAggregatorForTestUflData.Aggregate();
+
+        // Grab all 4 matches for "Week Seven" 
+        IList<IMatch> weekSevenMatches = superRepo.MatchRepository.GetFromDaysBack(new DateTime(2025, 05, 12), 3);
+        Assert.Equal(4, weekSevenMatches.Count);
+
+        // TEST: These should all be "true" as in this example, we don't have "Over/Under" predictions for these matches yet
+        foreach (IMatch weekSevenMatch in weekSevenMatches)
+        {
+            Assert.True(baseAggregatorForTestUflData.DoesThisMatchNeedOverUnderPrediction(weekSevenMatch));
+        }
+
+        // Get all Over Under Marks
+        IList<IOverUnder> marks = superRepo.OverUnderRepository.GetAll();
+        IEnumerable<IMatch> playedMatches = marks.Select(m => m.Match);
+
+        // Since we have matches from the over under marks, test to make sure that yeah, you don't need to make an Over Under prediction
+        Assert.Empty(playedMatches.Where(m => baseAggregatorForTestUflData.DoesThisMatchNeedOverUnderPrediction(m)));
     }
 }

@@ -10,4 +10,5 @@ public interface IAggregator
     IEnumerable<int> TotalUniqueUnders { get; }
     void Aggregate();
     Task AggregateAsync();
+    bool DoesThisMatchNeedOverUnderPrediction(IMatch MatchData);
 }

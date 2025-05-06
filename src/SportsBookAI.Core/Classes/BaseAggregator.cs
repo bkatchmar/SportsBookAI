@@ -26,6 +26,15 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
         IList<IOverUnder> marks = await Repo.OverUnderRepository.GetAllAsync();
         CompileAllOversAndUnders(marks);
     }
+    public bool DoesThisMatchNeedOverUnderPrediction(IMatch MatchData)
+    {
+        if (oversDict.Count > 0 || undersDict.Count > 0)
+        {
+            IList<IOverUnder> marks = Repo.OverUnderRepository.GetAll();
+            return !marks.Select(m => m.Match).Contains(MatchData);
+        }
+        return true;
+    }
 
     private void CompileAllOversAndUnders(IList<IOverUnder> Marks) 
     {

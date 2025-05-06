@@ -268,6 +268,40 @@ public class UflMatchRepository : IRepository<IMatch>
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
                 MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
             });
+
+            // Week 7
+            rtnVal.Add(new()
+            {
+                ID = 25,
+                HomeTeam = stLouis,
+                AwayTeam = arlington,
+                MatchDateTimeUTC = DateTime.Parse("2025-05-09T20:00:00", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                MatchDateTimeLocal = DateTime.Parse("2025-05-09T20:00:00")
+            });
+            rtnVal.Add(new()
+            {
+                ID = 26,
+                HomeTeam = houston,
+                AwayTeam = memphis,
+                MatchDateTimeUTC = DateTime.Parse("2025-05-10T13:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                MatchDateTimeLocal = DateTime.Parse("2025-05-10T13:00:00")
+            });
+            rtnVal.Add(new()
+            {
+                ID = 27,
+                HomeTeam = michigan,
+                AwayTeam = dc,
+                MatchDateTimeUTC = DateTime.Parse("2025-05-11T12:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                MatchDateTimeLocal = DateTime.Parse("2025-05-11T12:00:00")
+            });
+            rtnVal.Add(new()
+            {
+                ID = 28,
+                HomeTeam = birmingham,
+                AwayTeam = sanAntonio,
+                MatchDateTimeUTC = DateTime.Parse("2025-05-11T15:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                MatchDateTimeLocal = DateTime.Parse("2025-05-11T15:00:00")
+            });
         }
 
         return rtnVal;
