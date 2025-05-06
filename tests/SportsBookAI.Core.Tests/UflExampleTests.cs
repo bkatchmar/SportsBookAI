@@ -53,6 +53,8 @@ public class UflExampleTests
         IAggregator baseAggregatorForTestUflData = new BaseAggregator("UFL", superRepo);
         baseAggregatorForTestUflData.Aggregate();
 
+        BasePatternRepo basePredicitonRepo = new(baseAggregatorForTestUflData);
+
         // Grab all 4 matches for "Week Seven" 
         IList<IMatch> weekSevenMatches = superRepo.MatchRepository.GetFromDaysBack(new DateTime(2025, 05, 12), 3);
         Assert.Equal(4, weekSevenMatches.Count);
@@ -69,5 +71,11 @@ public class UflExampleTests
 
         // Since we have matches from the over under marks, test to make sure that yeah, you don't need to make an Over Under prediction
         Assert.Empty(playedMatches.Where(m => baseAggregatorForTestUflData.DoesThisMatchNeedOverUnderPrediction(m)));
+
+        // Time to make some predictions
+        IList<IPredictionPattern> allBasePredictionPatterns = basePredicitonRepo.GetAllPredictions(weekSevenMatches);
+        Assert.Equal(2, allBasePredictionPatterns.Count);
+        Assert.Equal("DC Defenders/San Antonio Brahmas Over", allBasePredictionPatterns.ElementAt(0).PredictionText);
+        Assert.Equal("Houston Roughnecks/Birmingham Stallions Under", allBasePredictionPatterns.ElementAt(1).PredictionText);
     }
 }

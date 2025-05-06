@@ -273,32 +273,32 @@ public class UflMatchRepository : IRepository<IMatch>
             rtnVal.Add(new()
             {
                 ID = 25,
-                HomeTeam = stLouis,
-                AwayTeam = arlington,
+                HomeTeam = sanAntonio,
+                AwayTeam = dc,
                 MatchDateTimeUTC = DateTime.Parse("2025-05-09T20:00:00", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
                 MatchDateTimeLocal = DateTime.Parse("2025-05-09T20:00:00")
             });
             rtnVal.Add(new()
             {
                 ID = 26,
-                HomeTeam = houston,
-                AwayTeam = memphis,
+                HomeTeam = arlington,
+                AwayTeam = michigan,
                 MatchDateTimeUTC = DateTime.Parse("2025-05-10T13:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
                 MatchDateTimeLocal = DateTime.Parse("2025-05-10T13:00:00")
             });
             rtnVal.Add(new()
             {
                 ID = 27,
-                HomeTeam = michigan,
-                AwayTeam = dc,
+                HomeTeam = birmingham,
+                AwayTeam = houston,
                 MatchDateTimeUTC = DateTime.Parse("2025-05-11T12:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
                 MatchDateTimeLocal = DateTime.Parse("2025-05-11T12:00:00")
             });
             rtnVal.Add(new()
             {
                 ID = 28,
-                HomeTeam = birmingham,
-                AwayTeam = sanAntonio,
+                HomeTeam = memphis,
+                AwayTeam = stLouis,
                 MatchDateTimeUTC = DateTime.Parse("2025-05-11T15:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
                 MatchDateTimeLocal = DateTime.Parse("2025-05-11T15:00:00")
             });
