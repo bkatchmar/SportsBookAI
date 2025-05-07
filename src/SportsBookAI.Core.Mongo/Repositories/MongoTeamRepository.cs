@@ -20,7 +20,7 @@ public class MongoTeamRepository : IRepository<ITeam>, IDisposable
     public IList<ITeam> GetAll()
     {
         CheckGetAllTeams();
-        
+
         List<ITeam> rtnVal = [];
         rtnVal.AddRange(_allTeams);
         return rtnVal;
@@ -33,7 +33,7 @@ public class MongoTeamRepository : IRepository<ITeam>, IDisposable
         rtnVal.AddRange(_allTeams);
         return rtnVal;
     }
-    public ITeam? GetById(dynamic ObjectId) 
+    public ITeam? GetById(dynamic ObjectId)
     {
         try
         {

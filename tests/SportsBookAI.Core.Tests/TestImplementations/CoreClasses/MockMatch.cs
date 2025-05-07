@@ -21,12 +21,12 @@ public class MockMatch : IMatch
 
         if (obj is MockMatch otherMatch)
         {
-            return HomeTeam.TeamName == otherMatch.HomeTeam.TeamName && AwayTeam.TeamName == otherMatch.AwayTeam.TeamName;
+            return ID == otherMatch.ID && HomeTeam.TeamName == otherMatch.HomeTeam.TeamName && AwayTeam.TeamName == otherMatch.AwayTeam.TeamName;
         }
 
         return false;
     }
-    
+
     public override int GetHashCode()
     {
         return HashCode.Combine(MatchDateTimeUTC, HomeTeam.TeamName, AwayTeam.TeamName);

@@ -30,7 +30,7 @@ public class MongoTeam : ITeam
 
         return false;
     }
-    
+
     public override int GetHashCode()
     {
         return HashCode.Combine(Id, TeamName);

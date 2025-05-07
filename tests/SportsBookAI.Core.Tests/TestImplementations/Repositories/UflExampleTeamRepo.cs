@@ -28,13 +28,13 @@ public class UflExampleTeamRepo : IRepository<ITeam>
         }
     }
 
-    public IList<ITeam> GetAll() 
+    public IList<ITeam> GetAll()
     {
         List<ITeam> rtnVal = [];
         rtnVal.AddRange(_uflTeams);
         return rtnVal;
     }
-    public Task<IList<ITeam>> GetAllAsync() 
+    public Task<IList<ITeam>> GetAllAsync()
     {
         List<ITeam> rtnVal = [];
         rtnVal.AddRange(_uflTeams);

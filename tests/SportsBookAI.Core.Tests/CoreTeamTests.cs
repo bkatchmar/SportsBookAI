@@ -16,7 +16,7 @@ public class CoreTeamTests
     [Fact]
     public void TestGetAll()
     {
-         Assert.Equal(6, teamRepo.GetAll().Count);
+        Assert.Equal(6, teamRepo.GetAll().Count);
     }
 
     [Fact]

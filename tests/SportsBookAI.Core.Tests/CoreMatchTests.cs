@@ -16,12 +16,12 @@ public class CoreMatchTests
     [Fact]
     public void TestGetAll()
     {
-         Assert.Equal(3, superRepo.MatchRepository.GetAll().Count);
+        Assert.Equal(3, superRepo.MatchRepository.GetAll().Count);
     }
 
     [Fact]
     public void TestTwoMatchesFromMayFirst()
     {
-         Assert.Equal(2, superRepo.MatchRepository.GetFromDaysBack(new DateTime(2025, 5, 1), 7).Count);
+        Assert.Equal(2, superRepo.MatchRepository.GetFromDaysBack(new DateTime(2025, 5, 1), 7).Count);
     }
 }

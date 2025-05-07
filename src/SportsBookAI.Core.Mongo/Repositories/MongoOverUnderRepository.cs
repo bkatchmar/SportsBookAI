@@ -22,7 +22,7 @@ public class MongoOverUnderRepository : IRepository<IOverUnder>, IDisposable
     public IList<IOverUnder> GetAll()
     {
         CheckGetAllRecords();
-        
+
         List<IOverUnder> rtnVal = [];
         rtnVal.AddRange(_allOverUnderMarks);
         return rtnVal;
@@ -36,7 +36,7 @@ public class MongoOverUnderRepository : IRepository<IOverUnder>, IDisposable
         return rtnVal;
     }
 
-    public IOverUnder? GetById(dynamic ObjectId) 
+    public IOverUnder? GetById(dynamic ObjectId)
     {
         try
         {
@@ -51,12 +51,12 @@ public class MongoOverUnderRepository : IRepository<IOverUnder>, IDisposable
     }
 
     public IOverUnder? GetByName(string Name) => null;
-    
+
     public IList<IOverUnder> GetFromDaysBack(DateTime CurrentDate, int DaysBack)
     {
         CheckGetAllRecords();
         DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
-        
+
         // Filter matches that fall within the range [earliestDate, CurrentDate)
         return GetAll()
             .Where(m => m.Match.MatchDateTimeLocal >= earliestDate && m.Match.MatchDateTimeLocal < CurrentDate)
@@ -70,7 +70,7 @@ public class MongoOverUnderRepository : IRepository<IOverUnder>, IDisposable
         {
             IMongoCollection<MongoOverUnder> collection = _database.GetCollection<MongoOverUnder>("overunder");
             _allOverUnderMarks = collection.Find(_ => true).ToList();
-            
+
             // Call in data enrichment as soon as we have the info from Mongo 
             _allOverUnderMarks.ForEach(match => match.FillInData(_allMatches));
             _allOverUnderMarks = _allOverUnderMarks.OrderBy(d => d.Match.MatchDateTimeUTC).ToList();

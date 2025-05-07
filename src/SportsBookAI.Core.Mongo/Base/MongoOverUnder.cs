@@ -27,7 +27,7 @@ public class MongoOverUnder : IOverUnder
 
     public void FillInData(IList<IMatch> AllMatches)
     {
-        List<MongoMatch> mongoTeams =  AllMatches.OfType<MongoMatch>().ToList();
+        List<MongoMatch> mongoTeams = AllMatches.OfType<MongoMatch>().ToList();
         Match = mongoTeams.First(t => t.Id == MatchId);
     }
 
@@ -42,7 +42,7 @@ public class MongoOverUnder : IOverUnder
 
         return false;
     }
-    
+
     public override int GetHashCode()
     {
         return HashCode.Combine(Id, MatchId);

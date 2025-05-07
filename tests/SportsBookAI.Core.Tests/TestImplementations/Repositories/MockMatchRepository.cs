@@ -61,7 +61,7 @@ public class MockMatchRepository(IRepository<ITeam> TeamRepo) : IRepository<IMat
 
         if (newYork != null && boston != null && miami != null && losAngeles != null && denver != null && seattle != null)
         {
-            rtnVal.AddRange( 
+            rtnVal.AddRange(
             [
                 new MockMatch
                 {
@@ -114,7 +114,7 @@ public class MockMatchRepository(IRepository<ITeam> TeamRepo) : IRepository<IMat
     public IList<IMatch> GetFromDaysBack(DateTime CurrentDate, int DaysBack)
     {
         DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
-        
+
         // Filter matches that fall within the range [earliestDate, CurrentDate)
         return GetAll()
             .Where(m => m.MatchDateTimeLocal >= earliestDate && m.MatchDateTimeLocal < CurrentDate)

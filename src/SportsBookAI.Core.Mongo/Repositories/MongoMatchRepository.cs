@@ -22,7 +22,7 @@ public class MongoMatchRepository : IRepository<IMatch>, IDisposable
     public IList<IMatch> GetAll()
     {
         CheckGetAllMatches();
-        
+
         List<IMatch> rtnVal = [];
         rtnVal.AddRange(_allMatches);
         return rtnVal;
@@ -36,7 +36,7 @@ public class MongoMatchRepository : IRepository<IMatch>, IDisposable
         return rtnVal;
     }
 
-    public IMatch? GetById(dynamic ObjectId) 
+    public IMatch? GetById(dynamic ObjectId)
     {
         try
         {
@@ -51,11 +51,11 @@ public class MongoMatchRepository : IRepository<IMatch>, IDisposable
     }
     public IMatch? GetByName(string Name) => null;
 
-     public IList<IMatch> GetFromDaysBack(DateTime CurrentDate, int DaysBack)
-     {
+    public IList<IMatch> GetFromDaysBack(DateTime CurrentDate, int DaysBack)
+    {
         CheckGetAllMatches();
         DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
-        
+
         // Filter matches that fall within the range [earliestDate, CurrentDate)
         return GetAll()
             .Where(m => m.MatchDateTimeLocal >= earliestDate && m.MatchDateTimeLocal < CurrentDate)
@@ -74,7 +74,7 @@ public class MongoMatchRepository : IRepository<IMatch>, IDisposable
         {
             IMongoCollection<MongoMatch> matchCollection = _database.GetCollection<MongoMatch>("matches");
             _allMatches = matchCollection.Find(_ => true).SortBy(team => team.MatchDate).ToList();
-            
+
             // Call in data enrichment as soon as we have the info from Mongo 
             _allMatches.ForEach(match => match.FillInData(_allTeams));
         }

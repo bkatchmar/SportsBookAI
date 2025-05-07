@@ -55,7 +55,7 @@ public class MongoMatch : IMatch
     {
         TimeZoneInfo newYorkTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
-        List<MongoTeam> mongoTeams =  AllTeams.OfType<MongoTeam>().ToList();
+        List<MongoTeam> mongoTeams = AllTeams.OfType<MongoTeam>().ToList();
 
         HomeTeam = mongoTeams.First(t => t.Id == HomeTeamId);
         AwayTeam = mongoTeams.First(t => t.Id == AwayTeamId);
@@ -78,7 +78,7 @@ public class MongoMatch : IMatch
 
         return false;
     }
-    
+
     public override int GetHashCode()
     {
         return HashCode.Combine(Id, HomeTeamId, AwayTeamId);
