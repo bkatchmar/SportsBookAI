@@ -74,8 +74,10 @@ public class UflExampleTests
 
         // Time to make some predictions
         IList<IPredictionPattern> allBasePredictionPatterns = basePredicitonRepo.GetAllPredictions(weekSevenMatches);
-        Assert.Equal(2, allBasePredictionPatterns.Count);
+        Assert.Equal(4, allBasePredictionPatterns.Count);
         Assert.Equal("DC Defenders/San Antonio Brahmas Over", allBasePredictionPatterns.ElementAt(0).PredictionText);
-        Assert.Equal("Houston Roughnecks/Birmingham Stallions Under", allBasePredictionPatterns.ElementAt(1).PredictionText);
+        Assert.Equal("DC Defenders/San Antonio Brahmas Over", allBasePredictionPatterns.ElementAt(1).PredictionText);
+        Assert.Equal("Houston Roughnecks/Birmingham Stallions Under", allBasePredictionPatterns.ElementAt(2).PredictionText);
+        Assert.Equal("Houston Roughnecks/Birmingham Stallions Under", allBasePredictionPatterns.ElementAt(4).PredictionText);
     }
 }

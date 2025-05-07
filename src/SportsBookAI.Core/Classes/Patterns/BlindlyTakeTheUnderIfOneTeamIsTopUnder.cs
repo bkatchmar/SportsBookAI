@@ -22,16 +22,16 @@ public class BlindlyTakeTheUnderIfOneTeamIsTopUnder : IPredictionPattern
 
     private void MakePreidction()
     {
-        int maxOvers = _aggregator.UndersByTeam.Values.Max();
+        int maxUnders = _aggregator.UndersByTeam.Values.Max();
         if (_aggregator.UndersByTeam.ContainsKey(_matchData.HomeTeam.TeamName))
         {
-            if (_aggregator.UndersByTeam[_matchData.HomeTeam.TeamName] == maxOvers)
+            if (_aggregator.UndersByTeam[_matchData.HomeTeam.TeamName] == maxUnders)
             {
                 PredictionMade = true;
                 PredictionText = $"{_matchData.AwayTeam.TeamName}/{_matchData.HomeTeam.TeamName} Under";
             }
 
-            if (_aggregator.UndersByTeam[_matchData.AwayTeam.TeamName] == maxOvers)
+            if (_aggregator.UndersByTeam[_matchData.AwayTeam.TeamName] == maxUnders)
             {
                 PredictionMade = true;
                 PredictionText = $"{_matchData.AwayTeam.TeamName}/{_matchData.HomeTeam.TeamName} Under";
