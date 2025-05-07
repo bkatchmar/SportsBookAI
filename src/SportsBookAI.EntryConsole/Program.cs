@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+﻿using System.Globalization;
+using CsvHelper;
+using Microsoft.Extensions.Configuration;
+using SportsBookAI.Core.Classes;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo;
 using SportsBookAI.Core.Mongo.Repositories;
@@ -13,6 +15,7 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
 
 // Read MongoDB settings from configuration
 AppSetting? mainSetting = configuration.GetSection("MainSetting").Get<AppSetting>();
+OutputSettings? outputSettings = configuration.GetSection("OutputSettings").Get<OutputSettings>();
 
 Console.WriteLine("Getting high level settings\n");
 
@@ -62,9 +65,32 @@ if (reposByLeague.Count > 0)
         Console.WriteLine("");
         Console.WriteLine($"Stored {allOverUnderMarks.Count} Over Under Records");
         Console.WriteLine("");
-        Console.WriteLine("JSON STRING");
-        Console.WriteLine(JsonConvert.SerializeObject(allMatches, Formatting.None));
         Console.WriteLine("===========\n");
+
+        Console.WriteLine("Lets make some preidctions!\n");
+
+        IAggregator baseAggregatorLeagueData = new BaseAggregator(repos.Key, repos.Value);
+        baseAggregatorLeagueData.Aggregate();
+
+        BasePatternRepo basePredicitonRepo = new(baseAggregatorLeagueData);
+
+        IList<IMatch> matchesThatNeedPredictions = allMatches.Where(m => baseAggregatorLeagueData.DoesThisMatchNeedOverUnderPrediction(m)).ToList();
+        Console.WriteLine($"I need to make predictions for {matchesThatNeedPredictions.Count} Matches");
+
+        // Time to make some predictions
+        IList<IPredictionPattern> allBasePredictionPatterns = basePredicitonRepo.GetAllPredictions(matchesThatNeedPredictions);
+        foreach (IPredictionPattern pattern in allBasePredictionPatterns)
+        {
+            Console.WriteLine(pattern.PredictionText);
+        }
+
+        Console.WriteLine("\nWrite To File\n");
+        if (!string.IsNullOrEmpty(outputSettings?.FileDestinationToWriteTo))
+        {
+            using StreamWriter writer = new(outputSettings?.FileDestinationToWriteTo);
+            using CsvWriter csv = new(writer, CultureInfo.InvariantCulture);
+            csv.WriteRecords(allBasePredictionPatterns);
+        }
     }
 }
 else

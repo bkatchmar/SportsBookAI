@@ -78,6 +78,6 @@ public class UflExampleTests
         Assert.Equal("DC Defenders/San Antonio Brahmas Over", allBasePredictionPatterns.ElementAt(0).PredictionText);
         Assert.Equal("DC Defenders/San Antonio Brahmas Over", allBasePredictionPatterns.ElementAt(1).PredictionText);
         Assert.Equal("Houston Roughnecks/Birmingham Stallions Under", allBasePredictionPatterns.ElementAt(2).PredictionText);
-        Assert.Equal("Houston Roughnecks/Birmingham Stallions Under", allBasePredictionPatterns.ElementAt(4).PredictionText);
+        Assert.Equal("Houston Roughnecks/Birmingham Stallions Under", allBasePredictionPatterns.ElementAt(3).PredictionText);
     }
 }
