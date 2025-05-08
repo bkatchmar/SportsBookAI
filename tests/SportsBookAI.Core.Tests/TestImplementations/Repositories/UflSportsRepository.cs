@@ -14,4 +14,5 @@ public class UflSportsRepository : ISportsBookRepository
     public IRepository<ITeam> TeamRepository { get; private set; }
     public IRepository<IMatch> MatchRepository { get; private set; }
     public IRepository<IOverUnder> OverUnderRepository { get; private set; }
+    public IRepository<IPointSpread> PointSpreadRepository => null!;
 }
