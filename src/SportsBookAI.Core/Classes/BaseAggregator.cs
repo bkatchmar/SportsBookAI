@@ -15,6 +15,8 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     public IDictionary<string, int> UndersByTeam => undersDict;
     public IEnumerable<int> TotalUniqueOvers => oversDict.Values.Distinct();
     public IEnumerable<int> TotalUniqueUnders => undersDict.Values.Distinct();
+    public double AllOverPercentage => CalculateUnderPercentage(OVER);
+    public double AllUnderPercentage => CalculateUnderPercentage(UNDER);
 
     public void Aggregate()
     {
@@ -70,6 +72,22 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
                 undersDict[result.Match.HomeTeam.TeamName] += 1;
                 undersDict[result.Match.AwayTeam.TeamName] += 1;
             }
+        }
+    }
+
+    private double CalculateUnderPercentage(string HitMark)
+    {
+        IList<IOverUnder> allMarks = Repo.OverUnderRepository.GetAll();
+        IEnumerable<IOverUnder> marks = allMarks.Where(m => m.Hit.Equals(HitMark, StringComparison.OrdinalIgnoreCase));
+
+        // Yeah, lets be a little more careful to not have a Divide By Zero exception thrown
+        if (allMarks.Count == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return (double)marks.Count() / allMarks.Count;
         }
     }
 }

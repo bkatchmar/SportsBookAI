@@ -8,6 +8,8 @@ public interface IAggregator
     IDictionary<string, int> UndersByTeam { get; }
     IEnumerable<int> TotalUniqueOvers { get; }
     IEnumerable<int> TotalUniqueUnders { get; }
+    double AllOverPercentage { get; }
+    double AllUnderPercentage { get; }
     void Aggregate();
     Task AggregateAsync();
     bool DoesThisMatchNeedOverUnderPrediction(IMatch MatchData);

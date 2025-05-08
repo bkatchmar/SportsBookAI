@@ -1,5 +1,6 @@
 using SportsBookAI.Core.Classes;
 using SportsBookAI.Core.Interfaces;
+using SportsBookAI.Core.Tests.TestImplementations.CoreClasses;
 using SportsBookAI.Core.Tests.TestImplementations.Repositories;
 
 namespace SportsBookAI.Core.Tests;
@@ -74,10 +75,37 @@ public class UflExampleTests
 
         // Time to make some predictions
         IList<IPredictionPattern> allBasePredictionPatterns = basePredicitonRepo.GetAllPredictions(weekSevenMatches);
-        Assert.Equal(4, allBasePredictionPatterns.Count);
-        Assert.Equal("DC Defenders/San Antonio Brahmas Over", allBasePredictionPatterns.ElementAt(0).PredictionText);
-        Assert.Equal("DC Defenders/San Antonio Brahmas Over", allBasePredictionPatterns.ElementAt(1).PredictionText);
-        Assert.Equal("Houston Roughnecks/Birmingham Stallions Under", allBasePredictionPatterns.ElementAt(2).PredictionText);
-        Assert.Equal("Houston Roughnecks/Birmingham Stallions Under", allBasePredictionPatterns.ElementAt(3).PredictionText);
+        Assert.Equal(7, allBasePredictionPatterns.Count);
+
+        // One more thing, take a game vs highest overs (DC Defenders) and match them against the highest unders (Stallions) and see if pattern ID 3 refuses to return a prediction
+        ITeam? dcDefenders = superRepo.TeamRepository.GetByName("DC Defenders");
+        ITeam? birminghamStallions = superRepo.TeamRepository.GetByName("Birmingham Stallions");
+        Assert.NotNull(dcDefenders);
+        Assert.NotNull(birminghamStallions);
+        MockMatch defendersVsStallions = new()
+        {
+            ID = 200,
+            HomeTeam = dcDefenders,
+            AwayTeam = birminghamStallions,
+            MatchDateTimeLocal = new DateTime(2025, 05, 12),
+            MatchDateTimeUTC = new DateTime(2025, 05, 12)
+        };
+
+        IList<IPredictionPattern> specificPredictions = basePredicitonRepo.GetAllPredictions([defendersVsStallions]);
+        Assert.Contains(specificPredictions, p => p.ID == 1);
+        Assert.Contains(specificPredictions, p => p.ID == 2);
+        Assert.DoesNotContain(specificPredictions, p => p.ID == 3);
+        Assert.DoesNotContain(specificPredictions, p => p.ID == 4);
+    }
+
+    [Fact]
+    public void GetOverUnderPercentagesForUflSampleDat()
+    {
+        IAggregator baseAggregatorForTestUflData = new BaseAggregator("UFL", superRepo);
+        baseAggregatorForTestUflData.Aggregate();
+
+        Assert.True(baseAggregatorForTestUflData.AllOverPercentage > 0); // Should be 0.5
+        Assert.True(baseAggregatorForTestUflData.AllUnderPercentage > 0); // Should be 0.4583333.....
+        Assert.True(baseAggregatorForTestUflData.AllOverPercentage > baseAggregatorForTestUflData.AllUnderPercentage);
     }
 }

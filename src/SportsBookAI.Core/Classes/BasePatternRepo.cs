@@ -10,7 +10,8 @@ public class BasePatternRepo(IAggregator AggregationLogic)
     [
         (agg, match) => new BlindlyTakeTheOverIfOneTeamIsTopOver(agg, match),
         (agg, match) => new BlindlyTakeTheUnderIfOneTeamIsTopUnder(agg, match),
-        (agg, match) => new MakePickIfTeamInOneExtremeButNotTheOther(agg, match)
+        (agg, match) => new MakePickIfTeamInOneExtremeButNotTheOther(agg, match),
+        (agg, match) => new PickMajorityOverUnderIfBothTeamsAreMiddleOfPack(agg, match)
     ];
 
     public IList<IPredictionPattern> GetAllPredictions(IList<IMatch> matches)

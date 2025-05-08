@@ -87,7 +87,7 @@ if (reposByLeague.Count > 0)
         Console.WriteLine("\nWrite To File\n");
         if (!string.IsNullOrEmpty(outputSettings?.FileDestinationToWriteTo))
         {
-            using StreamWriter writer = new(outputSettings?.FileDestinationToWriteTo);
+            using StreamWriter writer = new(string.Concat(outputSettings?.FileDestinationToWriteTo, repos.Key, " ", "Predictions.csv"));
             using CsvWriter csv = new(writer, CultureInfo.InvariantCulture);
             csv.WriteRecords(allBasePredictionPatterns);
         }
