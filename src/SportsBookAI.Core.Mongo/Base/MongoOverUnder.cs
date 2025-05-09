@@ -27,8 +27,8 @@ public class MongoOverUnder : IOverUnder
 
     public void FillInData(IList<IMatch> AllMatches)
     {
-        List<MongoMatch> mongoTeams = AllMatches.OfType<MongoMatch>().ToList();
-        Match = mongoTeams.First(t => t.Id == MatchId);
+        List<MongoMatch> mongoMatches = AllMatches.OfType<MongoMatch>().ToList();
+        Match = mongoMatches.First(t => t.Id == MatchId);
     }
 
     public override bool Equals(object? obj)

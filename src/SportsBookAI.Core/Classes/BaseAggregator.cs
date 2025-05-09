@@ -6,8 +6,14 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 {
     private readonly Dictionary<string, int> oversDict = [];
     private readonly Dictionary<string, int> undersDict = [];
+    private readonly Dictionary<string, int> plusWinsDict = [];
+    private readonly Dictionary<string, int> minusWinsDict = [];
+    private readonly Dictionary<string, int> plusLossesDict = [];
+    private readonly Dictionary<string, int> minusLossesDict = [];
     private const string OVER = "OVER";
     private const string UNDER = "UNDER";
+    private const string PLUS = "PLUS";
+    private const string MINUS = "MINUS";
 
     public string League => LeagueName;
     public ISportsBookRepository Repo => Repoository;
@@ -21,7 +27,9 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     public void Aggregate()
     {
         IList<IOverUnder> marks = Repo.OverUnderRepository.GetAll();
+        IList<IPointSpread> spreads = Repo.PointSpreadRepository.GetAll();
         CompileAllOversAndUnders(marks);
+        CompileAllPointSpreads(spreads);
     }
     public async Task AggregateAsync()
     {
@@ -88,6 +96,17 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
         else
         {
             return (double)marks.Count() / allMarks.Count;
+        }
+    }
+
+    private void CompileAllPointSpreads(IList<IPointSpread> PointSpreads)
+    {
+        foreach (IPointSpread result in PointSpreads)
+        {
+            _ = minusWinsDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
+            _ = minusLossesDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
+            _ = plusWinsDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
+            _ = plusLossesDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
         }
     }
 }

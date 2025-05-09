@@ -25,10 +25,22 @@ public class MongoPointSpread : IPointSpread
     [BsonIgnore]
     public IMatch Match { get; set; } = null!;
 
+    [BsonElement("FavoredTeamId")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string FavoredTeamId { get; set; } = null!;
+
+    [BsonIgnore]
+    public ITeam FavoredTeam { get; set; } = null!;
+
     public void FillInData(IList<IMatch> AllMatches)
     {
+        // Fill in match data
         List<MongoMatch> mongoMacthes = AllMatches.OfType<MongoMatch>().ToList();
         Match = mongoMacthes.First(t => t.Id == MatchId);
+
+        // Fill in team data, specifically, the favored team
+        HashSet<MongoTeam> allTeams = AllMatches.SelectMany(m => new[] { m.HomeTeam, m.AwayTeam }).OfType<MongoTeam>().ToHashSet();
+        FavoredTeam = allTeams.First(t => t.Id == FavoredTeamId);
     }
 
     public override bool Equals(object? obj)

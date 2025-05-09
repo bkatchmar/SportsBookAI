@@ -9,10 +9,11 @@ public class UflSportsRepository : ISportsBookRepository
         TeamRepository = new UflExampleTeamRepo();
         MatchRepository = new UflMatchRepository(TeamRepository);
         OverUnderRepository = new UflOverUnderRepository(MatchRepository);
+        PointSpreadRepository = new UflPointSpreadRepository(MatchRepository, TeamRepository);
     }
 
     public IRepository<ITeam> TeamRepository { get; private set; }
     public IRepository<IMatch> MatchRepository { get; private set; }
     public IRepository<IOverUnder> OverUnderRepository { get; private set; }
-    public IRepository<IPointSpread> PointSpreadRepository => null!;
+    public IRepository<IPointSpread> PointSpreadRepository { get; private set; }
 }
