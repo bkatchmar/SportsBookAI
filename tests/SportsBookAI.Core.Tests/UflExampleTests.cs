@@ -99,7 +99,7 @@ public class UflExampleTests
     }
 
     [Fact]
-    public void GetOverUnderPercentagesForUflSampleDat()
+    public void GetOverUnderPercentagesForUflSampleData()
     {
         IAggregator baseAggregatorForTestUflData = new BaseAggregator("UFL", superRepo);
         baseAggregatorForTestUflData.Aggregate();
@@ -107,5 +107,18 @@ public class UflExampleTests
         Assert.True(baseAggregatorForTestUflData.AllOverPercentage > 0); // Should be 0.5
         Assert.True(baseAggregatorForTestUflData.AllUnderPercentage > 0); // Should be 0.4583333.....
         Assert.True(baseAggregatorForTestUflData.AllOverPercentage > baseAggregatorForTestUflData.AllUnderPercentage);
+    }
+
+    [Fact]
+    public void GetPointSpreadForUflSampleData()
+    {
+        IAggregator baseAggregatorForTestUflData = new BaseAggregator("UFL", superRepo);
+        baseAggregatorForTestUflData.Aggregate();
+
+        // Check the aggregation records for the 'Houston Roughnecks'
+        Assert.Equal(0, baseAggregatorForTestUflData.GetTeamMinusSideWins("Houston Roughnecks"));
+        Assert.Equal(1, baseAggregatorForTestUflData.GetTeamMinusSideLosses("Houston Roughnecks"));
+        Assert.Equal(3, baseAggregatorForTestUflData.GetTeamPlusSideWins("Houston Roughnecks"));
+        Assert.Equal(2, baseAggregatorForTestUflData.GetTeamPlusSideLosses("Houston Roughnecks"));
     }
 }

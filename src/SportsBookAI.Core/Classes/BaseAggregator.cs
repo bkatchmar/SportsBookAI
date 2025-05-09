@@ -1,15 +1,13 @@
 using SportsBookAI.Core.Interfaces;
+using SportsBookAI.Core.Structs;
 
 namespace SportsBookAI.Core.Classes;
 
 public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository) : IAggregator
 {
-    private readonly Dictionary<string, int> oversDict = [];
-    private readonly Dictionary<string, int> undersDict = [];
-    private readonly Dictionary<string, int> plusWinsDict = [];
-    private readonly Dictionary<string, int> minusWinsDict = [];
-    private readonly Dictionary<string, int> plusLossesDict = [];
-    private readonly Dictionary<string, int> minusLossesDict = [];
+    private readonly Dictionary<string, int> _oversDict = [];
+    private readonly Dictionary<string, int> _undersDict = [];
+    private readonly Dictionary<string, List<PointSpreadRecord>> _pointSpreadRecords = [];
     private const string OVER = "OVER";
     private const string UNDER = "UNDER";
     private const string PLUS = "PLUS";
@@ -17,12 +15,16 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 
     public string League => LeagueName;
     public ISportsBookRepository Repo => Repoository;
-    public IDictionary<string, int> OversByTeam => oversDict;
-    public IDictionary<string, int> UndersByTeam => undersDict;
-    public IEnumerable<int> TotalUniqueOvers => oversDict.Values.Distinct();
-    public IEnumerable<int> TotalUniqueUnders => undersDict.Values.Distinct();
+    public IDictionary<string, int> OversByTeam => _oversDict;
+    public IDictionary<string, int> UndersByTeam => _undersDict;
+    public IEnumerable<int> TotalUniqueOvers => _oversDict.Values.Distinct();
+    public IEnumerable<int> TotalUniqueUnders => _undersDict.Values.Distinct();
     public double AllOverPercentage => CalculateUnderPercentage(OVER);
     public double AllUnderPercentage => CalculateUnderPercentage(UNDER);
+    public int GetTeamMinusSideWins(string TeamName) => GetWins(TeamName, MINUS);
+    public int GetTeamMinusSideLosses(string TeamName) => GetLosses(TeamName, MINUS);
+    public int GetTeamPlusSideWins(string TeamName) => GetWins(TeamName, PLUS);
+    public int GetTeamPlusSideLosses(string TeamName) => GetLosses(TeamName, PLUS);
 
     public void Aggregate()
     {
@@ -39,7 +41,7 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 
     public bool DoesThisMatchNeedOverUnderPrediction(IMatch MatchData)
     {
-        if (oversDict.Count > 0 || undersDict.Count > 0)
+        if (_oversDict.Count > 0 || _undersDict.Count > 0)
         {
             IList<IOverUnder> marks = Repo.OverUnderRepository.GetAll();
             return !marks.Select(m => m.Match).Contains(MatchData);
@@ -49,21 +51,21 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 
     private void CompileAllOversAndUnders(IList<IOverUnder> Marks)
     {
-        if (oversDict.Count == 0) CompileOvers(Marks);
-        if (undersDict.Count == 0) CompileUnders(Marks);
+        if (_oversDict.Count == 0) CompileOvers(Marks);
+        if (_undersDict.Count == 0) CompileUnders(Marks);
     }
 
     private void CompileOvers(IList<IOverUnder> Results)
     {
         foreach (IOverUnder result in Results)
         {
-            _ = oversDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
-            _ = oversDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
+            _ = _oversDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
+            _ = _oversDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
 
             if (result.Hit.Equals(OVER, StringComparison.OrdinalIgnoreCase))
             {
-                oversDict[result.Match.HomeTeam.TeamName] += 1;
-                oversDict[result.Match.AwayTeam.TeamName] += 1;
+                _oversDict[result.Match.HomeTeam.TeamName] += 1;
+                _oversDict[result.Match.AwayTeam.TeamName] += 1;
             }
         }
     }
@@ -72,13 +74,13 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     {
         foreach (IOverUnder result in Results)
         {
-            _ = undersDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
-            _ = undersDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
+            _ = _undersDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
+            _ = _undersDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
 
             if (result.Hit.Equals(UNDER, StringComparison.OrdinalIgnoreCase))
             {
-                undersDict[result.Match.HomeTeam.TeamName] += 1;
-                undersDict[result.Match.AwayTeam.TeamName] += 1;
+                _undersDict[result.Match.HomeTeam.TeamName] += 1;
+                _undersDict[result.Match.AwayTeam.TeamName] += 1;
             }
         }
     }
@@ -101,12 +103,85 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 
     private void CompileAllPointSpreads(IList<IPointSpread> PointSpreads)
     {
+        Dictionary<string, int> plusWinsDict = [];
+        Dictionary<string, int> minusWinsDict = [];
+        Dictionary<string, int> plusLossesDict = [];
+        Dictionary<string, int> minusLossesDict = [];
+
+        // Collect data
         foreach (IPointSpread result in PointSpreads)
         {
             _ = minusWinsDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
+            _ = minusWinsDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
+            _ = minusLossesDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
             _ = minusLossesDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
             _ = plusWinsDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
+            _ = plusWinsDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
+            _ = plusLossesDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
             _ = plusLossesDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
+
+            if (result.FavoredTeam.Equals(result.Match.HomeTeam) && result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
+            {
+                minusWinsDict[result.Match.HomeTeam.TeamName] += 1;
+                plusLossesDict[result.Match.AwayTeam.TeamName] += 1;
+            }
+            else if (result.FavoredTeam.Equals(result.Match.AwayTeam) && result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
+            {
+                minusWinsDict[result.Match.AwayTeam.TeamName] += 1;
+                plusLossesDict[result.Match.HomeTeam.TeamName] += 1;
+            }
+            else if (result.FavoredTeam.Equals(result.Match.HomeTeam) && result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+            {
+                minusLossesDict[result.Match.HomeTeam.TeamName] += 1;
+                plusWinsDict[result.Match.AwayTeam.TeamName] += 1;
+            }
+            else if (result.FavoredTeam.Equals(result.Match.AwayTeam) && result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+            {
+                minusLossesDict[result.Match.AwayTeam.TeamName] += 1;
+                plusWinsDict[result.Match.HomeTeam.TeamName] += 1;
+            }
         }
+
+        // Build the dictionary the obect will expose
+        IEnumerable<string> teamNames = minusWinsDict.Keys.Concat(minusLossesDict.Keys).Concat(plusWinsDict.Keys).Concat(plusLossesDict.Keys).Distinct();
+        foreach (string name in teamNames)
+        {
+            _ = _pointSpreadRecords.TryAdd(name, []);
+
+            _pointSpreadRecords[name].Add(new PointSpreadRecord(MINUS, minusWinsDict[name], minusLossesDict[name]));
+            _pointSpreadRecords[name].Add(new PointSpreadRecord(PLUS, plusWinsDict[name], plusLossesDict[name]));
+        }
+    }
+
+    private int GetWins(string TeamName, string Side)
+    {
+        if (_pointSpreadRecords.ContainsKey(TeamName))
+        {
+            foreach (PointSpreadRecord record in _pointSpreadRecords[TeamName])
+            {
+                if (record.Side.Equals(Side, StringComparison.OrdinalIgnoreCase))
+                {
+                    return record.Wins;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private int GetLosses(string TeamName, string Side)
+    {
+        if (_pointSpreadRecords.ContainsKey(TeamName))
+        {
+            foreach (PointSpreadRecord record in _pointSpreadRecords[TeamName])
+            {
+                if (record.Side.Equals(Side, StringComparison.OrdinalIgnoreCase))
+                {
+                    return record.Losses;
+                }
+            }
+        }
+
+        return 0;
     }
 }
