@@ -12,6 +12,9 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     private const string UNDER = "UNDER";
     private const string PLUS = "PLUS";
     private const string MINUS = "MINUS";
+    private int _numberOfPointSpreadMatches = 0;
+    private int _numberOfPointSpreadMinusWins = 0;
+    private int _numberOfPointSpreadPlusWins = 0;
 
     public string League => LeagueName;
     public ISportsBookRepository Repo => Repoository;
@@ -21,10 +24,14 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     public IEnumerable<int> TotalUniqueUnders => _undersDict.Values.Distinct();
     public double AllOverPercentage => CalculateUnderPercentage(OVER);
     public double AllUnderPercentage => CalculateUnderPercentage(UNDER);
+    public double AllMinusSpreadsPercentage => (_numberOfPointSpreadMatches == 0) ? 0 : (double)_numberOfPointSpreadMinusWins / _numberOfPointSpreadMatches;
+    public double AllPlusSpreadsPercentage => (_numberOfPointSpreadMatches == 0) ? 0 : (double)_numberOfPointSpreadPlusWins / _numberOfPointSpreadMatches;
     public int GetTeamMinusSideWins(string TeamName) => GetWins(TeamName, MINUS);
     public int GetTeamMinusSideLosses(string TeamName) => GetLosses(TeamName, MINUS);
     public int GetTeamPlusSideWins(string TeamName) => GetWins(TeamName, PLUS);
     public int GetTeamPlusSideLosses(string TeamName) => GetLosses(TeamName, PLUS);
+    public IEnumerable<int> MinusWinPoints => GetWinPoints(MINUS).Distinct();
+    public IEnumerable<int> MinusPlusPoints => GetWinPoints(PLUS).Distinct();
 
     public void Aggregate()
     {
@@ -111,6 +118,7 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
         // Collect data
         foreach (IPointSpread result in PointSpreads)
         {
+            _numberOfPointSpreadMatches += 1;
             _ = minusWinsDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
             _ = minusWinsDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
             _ = minusLossesDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
@@ -122,21 +130,25 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 
             if (result.FavoredTeam.Equals(result.Match.HomeTeam) && result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
             {
+                _numberOfPointSpreadMinusWins += 1;
                 minusWinsDict[result.Match.HomeTeam.TeamName] += 1;
                 plusLossesDict[result.Match.AwayTeam.TeamName] += 1;
             }
             else if (result.FavoredTeam.Equals(result.Match.AwayTeam) && result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
             {
+                _numberOfPointSpreadMinusWins += 1;
                 minusWinsDict[result.Match.AwayTeam.TeamName] += 1;
                 plusLossesDict[result.Match.HomeTeam.TeamName] += 1;
             }
             else if (result.FavoredTeam.Equals(result.Match.HomeTeam) && result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
             {
+                _numberOfPointSpreadPlusWins += 1;
                 minusLossesDict[result.Match.HomeTeam.TeamName] += 1;
                 plusWinsDict[result.Match.AwayTeam.TeamName] += 1;
             }
             else if (result.FavoredTeam.Equals(result.Match.AwayTeam) && result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
             {
+                _numberOfPointSpreadPlusWins += 1;
                 minusLossesDict[result.Match.AwayTeam.TeamName] += 1;
                 plusWinsDict[result.Match.HomeTeam.TeamName] += 1;
             }
@@ -183,5 +195,19 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
         }
 
         return 0;
+    }
+
+    private IEnumerable<int> GetWinPoints(string Side)
+    {
+        foreach (KeyValuePair<string, List<PointSpreadRecord>> record in _pointSpreadRecords)
+        {
+            foreach (PointSpreadRecord pointSpreadRecords in record.Value)
+            {
+                if (pointSpreadRecords.Side.Equals(Side, StringComparison.OrdinalIgnoreCase))
+                {
+                    yield return pointSpreadRecords.Wins;
+                }
+            }
+        }
     }
 }

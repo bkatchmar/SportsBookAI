@@ -11,14 +11,15 @@ public class BasePatternRepo(IAggregator AggregationLogic)
         (agg, match) => new BlindlyTakeTheOverIfOneTeamIsTopOver(agg, match),
         (agg, match) => new BlindlyTakeTheUnderIfOneTeamIsTopUnder(agg, match),
         (agg, match) => new MakePickIfTeamInOneExtremeButNotTheOther(agg, match),
-        (agg, match) => new PickMajorityOverUnderIfBothTeamsAreMiddleOfPack(agg, match)
+        (agg, match) => new PickMajorityOverUnderIfBothTeamsAreMiddleOfPack(agg, match),
+        (agg, match) => new IfOneSideOfPointSpreadIsOverAmountBlindlyPick(agg, match)
     ];
 
-    public IList<IPredictionPattern> GetAllPredictions(IList<IMatch> matches)
+    public IList<IPredictionPattern> GetAllPredictions(IList<IMatch> Matches)
     {
         IList<IPredictionPattern> rtnVal = [];
 
-        foreach (IMatch match in matches)
+        foreach (IMatch match in Matches)
         {
             foreach (var factory in _patternFactories)
             {

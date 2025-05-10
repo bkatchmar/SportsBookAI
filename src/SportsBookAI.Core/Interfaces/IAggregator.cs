@@ -10,10 +10,14 @@ public interface IAggregator
     IEnumerable<int> TotalUniqueUnders { get; }
     double AllOverPercentage { get; }
     double AllUnderPercentage { get; }
+    double AllMinusSpreadsPercentage { get; }
+    double AllPlusSpreadsPercentage { get; }
     int GetTeamMinusSideWins(string TeamName);
     int GetTeamMinusSideLosses(string TeamName);
     int GetTeamPlusSideWins(string TeamName);
-     int GetTeamPlusSideLosses(string TeamName);
+    int GetTeamPlusSideLosses(string TeamName);
+    IEnumerable<int> MinusWinPoints { get; }
+    IEnumerable<int> MinusPlusPoints { get; }
     void Aggregate();
     Task AggregateAsync();
     bool DoesThisMatchNeedOverUnderPrediction(IMatch MatchData);

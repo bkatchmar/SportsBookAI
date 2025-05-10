@@ -29,6 +29,6 @@ public class MockMatch : IMatch
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(MatchDateTimeUTC, HomeTeam.TeamName, AwayTeam.TeamName);
+        return HashCode.Combine(ID, MatchDateTimeUTC, HomeTeam.TeamName, AwayTeam.TeamName);
     }
 }

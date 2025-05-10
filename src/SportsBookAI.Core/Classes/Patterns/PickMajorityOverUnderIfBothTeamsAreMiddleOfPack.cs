@@ -33,7 +33,7 @@ public class PickMajorityOverUnderIfBothTeamsAreMiddleOfPack : IPredictionPatter
             int awayTeamOvers =  _aggregator.OversByTeam[_matchData.AwayTeam.TeamName];
             int awayTeamUnders =  _aggregator.UndersByTeam[_matchData.AwayTeam.TeamName];
 
-            if (homeTeamOvers < maxOvers && awayTeamOvers < maxOvers && awayTeamOvers < maxUnders && awayTeamUnders < maxUnders)
+            if (homeTeamOvers < maxOvers && awayTeamOvers < maxOvers && homeTeamUnders < maxUnders && awayTeamUnders < maxUnders)
             {
                 if (_aggregator.AllOverPercentage > _aggregator.AllUnderPercentage)
                 {
