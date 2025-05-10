@@ -56,6 +56,21 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
         return true;
     }
 
+    public bool DoesThisMatchNeedPointSpreadPrediction(IMatch MatchData)
+    {
+        IList<IPointSpread> allSpreads = Repo.PointSpreadRepository.GetAll();
+        if (allSpreads.Select(m => m.Match).Contains(MatchData))
+        {
+            IPointSpread lookup = allSpreads.First(s => s.Match.Equals(MatchData));
+            if (string.IsNullOrEmpty(lookup.Result))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void CompileAllOversAndUnders(IList<IOverUnder> Marks)
     {
         if (_oversDict.Count == 0) CompileOvers(Marks);

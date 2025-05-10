@@ -235,6 +235,36 @@ public class UflPointSpreadRepository : IRepository<IPointSpread>
                 Result = "MINUS",
                 FavoredTeam = birmingham
             });
+
+            // Week 7
+            rtnVal.Add(new()
+            {
+                Match = _matchRepo.GetById(25) ?? _matchRepo.GetAll().First(),
+                Spread = 6.5,
+                Result = "",
+                FavoredTeam = dc
+            });
+            rtnVal.Add(new()
+            {
+                Match = _matchRepo.GetById(26) ?? _matchRepo.GetAll().First(),
+                Spread = 1.5,
+                Result = "",
+                FavoredTeam = michigan
+            });
+            rtnVal.Add(new()
+            {
+                Match = _matchRepo.GetById(27) ?? _matchRepo.GetAll().First(),
+                Spread = 6.5,
+                Result = "",
+                FavoredTeam = birmingham
+            });
+            rtnVal.Add(new()
+            {
+                Match = _matchRepo.GetById(28) ?? _matchRepo.GetAll().First(),
+                Spread = 4.5,
+                Result = "",
+                FavoredTeam = stLouis
+            });
         }
 
         return rtnVal;

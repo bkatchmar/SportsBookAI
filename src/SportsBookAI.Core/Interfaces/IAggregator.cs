@@ -21,4 +21,5 @@ public interface IAggregator
     void Aggregate();
     Task AggregateAsync();
     bool DoesThisMatchNeedOverUnderPrediction(IMatch MatchData);
+    bool DoesThisMatchNeedPointSpreadPrediction(IMatch MatchData);
 }

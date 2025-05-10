@@ -1,4 +1,5 @@
 using SportsBookAI.Core.Classes;
+using SportsBookAI.Core.Classes.Patterns;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Tests.TestImplementations.CoreClasses;
 using SportsBookAI.Core.Tests.TestImplementations.Repositories;
@@ -126,6 +127,49 @@ public class UflExampleTests
         Assert.True(baseAggregatorForTestUflData.AllPlusSpreadsPercentage > 0);
         Assert.True(baseAggregatorForTestUflData.AllPlusSpreadsPercentage > baseAggregatorForTestUflData.AllMinusSpreadsPercentage);
         Assert.True(baseAggregatorForTestUflData.AllPlusSpreadsPercentage < 0.6);
+    }
+
+    [Fact]
+    public void TrustId4OmitsPick()
+    {
+        IAggregator baseAggregatorForTestUflData = new BaseAggregator("UFL", superRepo);
+        baseAggregatorForTestUflData.Aggregate();
+
+        // One more thing, take a game vs highest overs (DC Defenders) and match them against the highest unders (Stallions) and see if pattern ID 3 refuses to return a prediction
+        ITeam? houstonRoughnecks = superRepo.TeamRepository.GetByName("Houston Roughnecks");
+        ITeam? birminghamStallions = superRepo.TeamRepository.GetByName("Birmingham Stallions");
+        Assert.NotNull(houstonRoughnecks);
+        Assert.NotNull(birminghamStallions);
+        MockMatch roughnecksVsStallions = new()
+        {
+            ID = 200,
+            HomeTeam = birminghamStallions,
+            AwayTeam = birminghamStallions,
+            MatchDateTimeLocal = new DateTime(2025, 05, 12),
+            MatchDateTimeUTC = new DateTime(2025, 05, 12)
+        };
+
+        IPredictionPattern id4 = new PickMajorityOverUnderIfBothTeamsAreMiddleOfPack(baseAggregatorForTestUflData, roughnecksVsStallions);
+        Assert.False(id4.PredictionMade);
+    }
+
+    [Fact]
+    public void GetLookupIfPointSpreadsNeedPredictions()
+    {
+        IAggregator baseAggregatorForTestUflData = new BaseAggregator("UFL", superRepo);
+        baseAggregatorForTestUflData.Aggregate();
+
+        BasePatternRepo basePredicitonRepo = new(baseAggregatorForTestUflData);
+
+        // Grab all 4 matches for "Week Seven" 
+        IList<IMatch> weekSevenMatches = superRepo.MatchRepository.GetFromDaysBack(new DateTime(2025, 05, 12), 3);
+        Assert.Equal(4, weekSevenMatches.Count);
+
+        // TEST: These should all be "true" as in this example, we don't have "Over/Under" predictions for these matches yet
+        foreach (IMatch weekSevenMatch in weekSevenMatches)
+        {
+            Assert.True(baseAggregatorForTestUflData.DoesThisMatchNeedPointSpreadPrediction(weekSevenMatch));
+        }
     }
 
     [Fact]
