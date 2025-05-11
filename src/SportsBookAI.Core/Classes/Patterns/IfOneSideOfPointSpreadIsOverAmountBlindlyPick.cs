@@ -7,8 +7,9 @@ public class IfOneSideOfPointSpreadIsOverAmountBlindlyPick : IPredictionPattern
     private IAggregator _aggregator;
     private IMatch _matchData;
     private double _threshold;
+    private int _customId;
 
-    public IfOneSideOfPointSpreadIsOverAmountBlindlyPick(IAggregator AggregationLogic, IMatch MatchData, double Threshold = 0.6)
+    public IfOneSideOfPointSpreadIsOverAmountBlindlyPick(IAggregator AggregationLogic, IMatch MatchData, double Threshold, int ID)
     {
         _aggregator = AggregationLogic;
         _matchData = MatchData;
@@ -18,8 +19,8 @@ public class IfOneSideOfPointSpreadIsOverAmountBlindlyPick : IPredictionPattern
         string? m = MatchData.ToString();
     }
 
-    public int ID => 5;
-    public string Name => "If Plus Minus Side Exceed Threshold, Blindly Pick That Side";
+    public int ID => ID;
+    public string Name => $"If Plus Minus Side Exceed {_threshold.ToString("P0")} Threshold, Blindly Pick That Side";
     public bool PredictionMade { get; private set; } = false;
     public string PredictionText { get; private set; } = string.Empty;
     public string Match => _matchData.ToString() ?? "Match Data Not Available";
