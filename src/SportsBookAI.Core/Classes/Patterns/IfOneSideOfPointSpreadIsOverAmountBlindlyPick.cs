@@ -16,8 +16,6 @@ public class IfOneSideOfPointSpreadIsOverAmountBlindlyPick : IPredictionPattern
         _threshold = Threshold;
         _customId = ID;
         MakePreidction();
-
-        string? m = MatchData.ToString();
     }
 
     public int ID => _customId;
