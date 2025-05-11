@@ -14,12 +14,13 @@ public class IfOneSideOfPointSpreadIsOverAmountBlindlyPick : IPredictionPattern
         _aggregator = AggregationLogic;
         _matchData = MatchData;
         _threshold = Threshold;
+        _customId = ID;
         MakePreidction();
 
         string? m = MatchData.ToString();
     }
 
-    public int ID => ID;
+    public int ID => _customId;
     public string Name => $"If Plus Minus Side Exceed {_threshold.ToString("P0")} Threshold, Blindly Pick That Side";
     public bool PredictionMade { get; private set; } = false;
     public string PredictionText { get; private set; } = string.Empty;
