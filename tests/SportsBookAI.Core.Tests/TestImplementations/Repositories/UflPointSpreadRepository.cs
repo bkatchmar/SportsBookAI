@@ -265,6 +265,15 @@ public class UflPointSpreadRepository : IRepository<IPointSpread>
                 Result = "",
                 FavoredTeam = stLouis
             });
+
+            // I need a fake match for testing purposes, oh well, this is a test repo class after all...
+            rtnVal.Add(new()
+            {
+                Match = _matchRepo.GetById(200) ?? _matchRepo.GetAll().First(),
+                Spread = 4.5,
+                Result = "",
+                FavoredTeam = stLouis
+            });
         }
 
         return rtnVal;

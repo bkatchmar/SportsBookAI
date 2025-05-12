@@ -20,7 +20,7 @@ public class UflExampleTests
     public void GetAllUflDataPoints()
     {
         Assert.Equal(8, superRepo.TeamRepository.GetAll().Count);
-        Assert.Equal(28, superRepo.MatchRepository.GetAll().Count);
+        Assert.Equal(29, superRepo.MatchRepository.GetAll().Count);
         Assert.Equal(24, superRepo.OverUnderRepository.GetAll().Count);
     }
 
@@ -143,7 +143,7 @@ public class UflExampleTests
         MockMatch roughnecksVsStallions = new()
         {
             ID = 200,
-            HomeTeam = birminghamStallions,
+            HomeTeam = houstonRoughnecks,
             AwayTeam = birminghamStallions,
             MatchDateTimeLocal = new DateTime(2025, 05, 12),
             MatchDateTimeUTC = new DateTime(2025, 05, 12)
@@ -175,6 +175,27 @@ public class UflExampleTests
     [Fact]
     public void PretdictMinusSideIfFavoredTeamHasBetterRecordThanOpponentOnPlusSide()
     {
-        Assert.Equal(1,1);
+        IAggregator baseAggregatorForTestUflData = new BaseAggregator("UFL", superRepo);
+        baseAggregatorForTestUflData.Aggregate();
+
+        ITeam? stLouisBattlehawks = superRepo.TeamRepository.GetByName("St. Louis Battlehawks");
+        ITeam? michiganPanthers = superRepo.TeamRepository.GetByName("Michigan Panthers");
+
+        Assert.NotNull(stLouisBattlehawks);
+        Assert.NotNull(michiganPanthers);
+        IMatch showboatsVsBattleHawks = baseAggregatorForTestUflData.Repo.MatchRepository.GetById(200) ?? baseAggregatorForTestUflData.Repo.MatchRepository.GetAll().First();
+
+        MockPointSpread gameSpread = new()
+        {
+            FavoredTeam = stLouisBattlehawks,
+            Match = baseAggregatorForTestUflData.Repo.MatchRepository.GetById(200) ?? baseAggregatorForTestUflData.Repo.MatchRepository.GetAll().First(),
+            Result = string.Empty,
+            Spread = 1.5
+        };
+
+        PickPlusMinusIfOneSideRecordGreaterThanOther prediction = new(baseAggregatorForTestUflData, showboatsVsBattleHawks);
+
+        Assert.True(prediction.PredictionMade);
+        Assert.Equal("St. Louis Battlehawks Over Memphis Showboats -", prediction.PredictionText);
     }
 }

@@ -302,6 +302,16 @@ public class UflMatchRepository : IRepository<IMatch>
                 MatchDateTimeUTC = DateTime.Parse("2025-05-11T15:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
                 MatchDateTimeLocal = DateTime.Parse("2025-05-11T15:00:00")
             });
+
+            // I need a fake match for testing purposes, oh well, this is a test repo class after all...
+            rtnVal.Add(new()
+            {
+                ID = 200,
+                HomeTeam = stLouis,
+                AwayTeam = memphis,
+                MatchDateTimeUTC = DateTime.Parse("2026-05-11T15:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                MatchDateTimeLocal = DateTime.Parse("2026-05-11T15:00:00")
+            });
         }
 
         return rtnVal;
