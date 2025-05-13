@@ -66,7 +66,6 @@ if (reposByLeague.Count > 0)
         Console.WriteLine("");
         Console.WriteLine($"Stored {allPointSpreads.Count} Point Spread Records");
         Console.WriteLine("");
-        Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(allPointSpreads));
         Console.WriteLine("===========\n");
 
         Console.WriteLine("Lets make some preidctions!\n");

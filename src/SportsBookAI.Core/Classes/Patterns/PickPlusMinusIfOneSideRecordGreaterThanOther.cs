@@ -31,7 +31,7 @@ public class PickPlusMinusIfOneSideRecordGreaterThanOther : IPredictionPattern
             ITeam underdog = lookup.FavoredTeam.Equals(_matchData.HomeTeam) ? _matchData.AwayTeam : _matchData.HomeTeam;
 
             int minusSideWins = _aggregator.GetTeamMinusSideWins(favoredTeam.TeamName);
-            int minusSideLosses = _aggregator.GetTeamMinusSideWins(favoredTeam.TeamName);
+            int minusSideLosses = _aggregator.GetTeamMinusSideLosses(favoredTeam.TeamName);
             int totalMinusMatches = minusSideWins + minusSideLosses; 
             double minusSideWinPercentage = totalMinusMatches == 0 ? 0 : (double)minusSideWins / totalMinusMatches;
 
