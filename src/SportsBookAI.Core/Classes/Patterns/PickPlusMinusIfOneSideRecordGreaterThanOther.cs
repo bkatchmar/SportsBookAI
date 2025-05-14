@@ -37,7 +37,7 @@ public class PickPlusMinusIfOneSideRecordGreaterThanOther : IPredictionPattern
 
             int plusSideWins = _aggregator.GetTeamPlusSideWins(underdog.TeamName);
             int plusSideLosses = _aggregator.GetTeamPlusSideLosses(underdog.TeamName);
-            int plusMinusMatches = minusSideWins + minusSideLosses; 
+            int plusMinusMatches = plusSideWins + plusSideLosses; 
             double plusSideWinPercentage = plusMinusMatches == 0 ? 0 : (double)plusSideWins / plusMinusMatches;
 
             if (minusSideWinPercentage > plusSideWinPercentage)
