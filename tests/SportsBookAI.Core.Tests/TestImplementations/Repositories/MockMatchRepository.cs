@@ -121,4 +121,17 @@ public class MockMatchRepository(IRepository<ITeam> TeamRepo) : IRepository<IMat
             .Cast<IMatch>()
             .ToList();
     }
+
+    public Task<IList<IMatch>> GetFromDaysBackAsync(DateTime CurrentDate, int DaysBack)
+    {
+        DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
+
+        // Filter matches that fall within the range [earliestDate, CurrentDate)
+        IList<IMatch> lookup = GetAll()
+            .Where(m => m.MatchDateTimeLocal >= earliestDate && m.MatchDateTimeLocal < CurrentDate)
+            .Cast<IMatch>()
+            .ToList();
+
+        return Task.FromResult(lookup);
+    }
 }

@@ -40,6 +40,19 @@ public class UflPointSpreadRepository : IRepository<IPointSpread>
             .ToList();
     }
 
+    public Task<IList<IPointSpread>> GetFromDaysBackAsync(DateTime CurrentDate, int DaysBack)
+    {
+        DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
+
+        // Filter matches that fall within the range [earliestDate, CurrentDate)
+        IList<IPointSpread> lookup = GetAll()
+            .Where(m => m.Match.MatchDateTimeLocal >= earliestDate && m.Match.MatchDateTimeLocal < CurrentDate)
+            .Cast<IPointSpread>()
+            .ToList();
+
+        return Task.FromResult(lookup);
+    }
+
     private List<MockPointSpread> GetAllHardcodedOverUnders()
     {
         List<MockPointSpread> rtnVal = [];

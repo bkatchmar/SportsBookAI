@@ -64,6 +64,19 @@ public class MongoPointSpreadRepository : IRepository<IPointSpread>, IDisposable
             .ToList();
     }
 
+    public async Task<IList<IPointSpread>> GetFromDaysBackAsync(DateTime CurrentDate, int DaysBack)
+    {
+        await CheckGetAllRecordsAsync();
+
+        DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
+
+        // Filter matches that fall within the range [earliestDate, CurrentDate)
+        return GetAll()
+            .Where(m => m.Match.MatchDateTimeLocal >= earliestDate && m.Match.MatchDateTimeLocal < CurrentDate)
+            .Cast<IPointSpread>()
+            .ToList();
+    }
+
     private void CheckGetAllRecords()
     {
         if (!_allPointSpreads.Any())

@@ -58,6 +58,12 @@ public class MongoTeamRepository : IRepository<ITeam>, IDisposable
         throw new NotImplementedException();
     }
 
+    [Obsolete("This method is not applicable for TeamRepository and will always throw a NotImplementedException.", true)]
+    public Task<IList<ITeam>> GetFromDaysBackAsync(DateTime CurrentDate, int DaysBack)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Dispose()
     {
         _mongoClient.Dispose();

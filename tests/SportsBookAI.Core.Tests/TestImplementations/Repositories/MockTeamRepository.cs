@@ -31,4 +31,6 @@ public class MockTeamRepository : IRepository<ITeam>
 
     /// <summary>Not used in mock implementation. Not relevant for teams</summary>
     public IList<ITeam> GetFromDaysBack(DateTime CurrentDate, int DaysBack) => throw new NotImplementedException("MockTeamRepository class does not use or need this method");
+
+    public Task<IList<ITeam>> GetFromDaysBackAsync(DateTime CurrentDate, int DaysBack) => throw new NotImplementedException("MockTeamRepository class does not use or need this method");
 }

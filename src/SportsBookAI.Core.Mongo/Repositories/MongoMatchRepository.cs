@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using MongoDB.Driver;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo.Base;
@@ -54,6 +55,19 @@ public class MongoMatchRepository : IRepository<IMatch>, IDisposable
     public IList<IMatch> GetFromDaysBack(DateTime CurrentDate, int DaysBack)
     {
         CheckGetAllMatches();
+        DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
+
+        // Filter matches that fall within the range [earliestDate, CurrentDate)
+        return GetAll()
+            .Where(m => m.MatchDateTimeLocal >= earliestDate && m.MatchDateTimeLocal < CurrentDate)
+            .Cast<IMatch>()
+            .ToList();
+    }
+
+    public async Task<IList<IMatch>> GetFromDaysBackAsync(DateTime CurrentDate, int DaysBack)
+    {
+        await CheckGetAllMatchesAsync();
+
         DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
 
         // Filter matches that fall within the range [earliestDate, CurrentDate)

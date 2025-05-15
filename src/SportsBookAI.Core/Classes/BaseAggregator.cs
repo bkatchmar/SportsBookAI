@@ -3,7 +3,7 @@ using SportsBookAI.Core.Structs;
 
 namespace SportsBookAI.Core.Classes;
 
-public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository) : IAggregator
+public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository, DateTime? Point = null, int DaysBack = -1) : IAggregator
 {
     private readonly Dictionary<string, int> _oversDict = [];
     private readonly Dictionary<string, int> _undersDict = [];
@@ -15,6 +15,10 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     private int _numberOfPointSpreadMatches = 0;
     private int _numberOfPointSpreadMinusWins = 0;
     private int _numberOfPointSpreadPlusWins = 0;
+
+    // If these are not null, we are not getting all match data
+    private DateTime _datePoint = Point ?? DateTime.Today;
+    private int _daysBack = DaysBack;
 
     public string League => LeagueName;
     public ISportsBookRepository Repo => Repoository;
@@ -35,22 +39,24 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 
     public void Aggregate()
     {
-        IList<IOverUnder> marks = Repo.OverUnderRepository.GetAll();
-        IList<IPointSpread> spreads = Repo.PointSpreadRepository.GetAll();
+        IList<IOverUnder> marks = GetAllOverUnders();
+        IList<IPointSpread> spreads = GetAllPointSpreads();
         CompileAllOversAndUnders(marks);
         CompileAllPointSpreads(spreads);
     }
     public async Task AggregateAsync()
     {
-        IList<IOverUnder> marks = await Repo.OverUnderRepository.GetAllAsync();
+        IList<IOverUnder> marks = await GetAllOverUndersAsync();
+        IList<IPointSpread> spreads = await GetAllPointSpreadsASync();
         CompileAllOversAndUnders(marks);
+        CompileAllPointSpreads(spreads);
     }
 
     public bool DoesThisMatchNeedOverUnderPrediction(IMatch MatchData)
     {
         if (_oversDict.Count > 0 || _undersDict.Count > 0)
         {
-            IList<IOverUnder> marks = Repo.OverUnderRepository.GetAll();
+            IList<IOverUnder> marks = GetAllOverUnders();
             return !marks.Select(m => m.Match).Contains(MatchData);
         }
         return true;
@@ -58,7 +64,7 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 
     public bool DoesThisMatchNeedPointSpreadPrediction(IMatch MatchData)
     {
-        IList<IPointSpread> allSpreads = Repo.PointSpreadRepository.GetAll();
+        IList<IPointSpread> allSpreads = GetAllPointSpreads();
         if (allSpreads.Select(m => m.Match).Contains(MatchData))
         {
             IPointSpread lookup = allSpreads.First(s => s.Match.Equals(MatchData));
@@ -109,7 +115,7 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 
     private double CalculateUnderPercentage(string HitMark)
     {
-        IList<IOverUnder> allMarks = Repo.OverUnderRepository.GetAll();
+        IList<IOverUnder> allMarks = GetAllOverUnders();
         IEnumerable<IOverUnder> marks = allMarks.Where(m => m.Hit.Equals(HitMark, StringComparison.OrdinalIgnoreCase));
 
         // Yeah, lets be a little more careful to not have a Divide By Zero exception thrown
@@ -224,5 +230,45 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
                 }
             }
         }
+    }
+
+    private IList<IOverUnder> GetAllOverUnders()
+    {
+        if (_daysBack > -1)
+        {
+            return Repo.OverUnderRepository.GetFromDaysBack(_datePoint, _daysBack);
+        }
+
+        return Repo.OverUnderRepository.GetAll();
+    }
+
+    private async Task<IList<IOverUnder>> GetAllOverUndersAsync()
+    {
+        if (_daysBack > -1)
+        {
+            return Repo.OverUnderRepository.GetFromDaysBack(_datePoint, _daysBack);
+        }
+
+        return await Repo.OverUnderRepository.GetAllAsync();
+    }
+
+    private IList<IPointSpread> GetAllPointSpreads()
+    {
+        if (_daysBack > -1)
+        {
+            return Repo.PointSpreadRepository.GetFromDaysBack(_datePoint, _daysBack);
+        }
+
+        return Repo.PointSpreadRepository.GetAll();
+    }
+    
+    private async Task<IList<IPointSpread>> GetAllPointSpreadsASync()
+    {
+        if (_daysBack > -1)
+        {
+            return Repo.PointSpreadRepository.GetFromDaysBack(_datePoint, _daysBack);
+        }
+        
+        return await Repo.PointSpreadRepository.GetAllAsync(); ;
     }
 }

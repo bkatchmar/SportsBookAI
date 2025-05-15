@@ -7,4 +7,5 @@ public interface IRepository<T>
     T? GetById(dynamic ObjectId);
     T? GetByName(string Name);
     IList<T> GetFromDaysBack(DateTime CurrentDate, int DaysBack);
+    Task<IList<T>> GetFromDaysBackAsync(DateTime CurrentDate, int DaysBack);
 }

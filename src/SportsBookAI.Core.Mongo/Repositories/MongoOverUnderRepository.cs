@@ -64,6 +64,19 @@ public class MongoOverUnderRepository : IRepository<IOverUnder>, IDisposable
             .ToList();
     }
 
+    public async Task<IList<IOverUnder>> GetFromDaysBackAsync(DateTime CurrentDate, int DaysBack)
+    {
+        await CheckGetAllRecordsAsync();
+
+        DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
+
+        // Filter matches that fall within the range [earliestDate, CurrentDate)
+        return GetAll()
+            .Where(m => m.Match.MatchDateTimeLocal >= earliestDate && m.Match.MatchDateTimeLocal < CurrentDate)
+            .Cast<IOverUnder>()
+            .ToList();
+    }
+
     private void CheckGetAllRecords()
     {
         if (!_allOverUnderMarks.Any())

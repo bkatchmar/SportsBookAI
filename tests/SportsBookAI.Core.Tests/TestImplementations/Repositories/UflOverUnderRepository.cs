@@ -38,6 +38,19 @@ public class UflOverUnderRepository : IRepository<IOverUnder>
             .ToList();
     }
 
+    public Task<IList<IOverUnder>> GetFromDaysBackAsync(DateTime CurrentDate, int DaysBack)
+    {
+        DateTime earliestDate = CurrentDate.AddDays(-DaysBack);
+
+        // Filter matches that fall within the range [earliestDate, CurrentDate)
+        IList<IOverUnder> lookup = GetAll()
+            .Where(m => m.Match.MatchDateTimeLocal >= earliestDate && m.Match.MatchDateTimeLocal < CurrentDate)
+            .Cast<IOverUnder>()
+            .ToList();
+
+        return Task.FromResult(lookup);
+    }
+
     private List<MockOverUnder> GetAllHardcodedOverUnders()
     {
         List<MockOverUnder> rtnVal = [];
