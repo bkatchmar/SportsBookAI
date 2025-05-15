@@ -13,7 +13,9 @@ public class BasePatternRepo(IAggregator AggregationLogic)
         (agg, match) => new MakePickIfTeamInOneExtremeButNotTheOther(agg, match),
         (agg, match) => new PickMajorityOverUnderIfBothTeamsAreMiddleOfPack(agg, match),
         (agg, match) => new IfOneSideOfPointSpreadIsOverAmountBlindlyPick(agg, match, 0.6, 5),
-        (agg, match) => new PickPlusMinusIfOneSideRecordGreaterThanOther(agg, match)
+        (agg, match) => new PickPlusMinusIfOneSideRecordGreaterThanOther(agg, match),
+        (agg, match) => new PickOverUnderFromPreviousMatchesBetweenTwoTeams(agg, match),
+        (agg, match) => new FlipPickOverUnderFromPreviousMatchesBetweenTwoTeams(agg, match)
     ];
 
     public IList<IPredictionPattern> GetAllPredictions(IList<IMatch> Matches)
