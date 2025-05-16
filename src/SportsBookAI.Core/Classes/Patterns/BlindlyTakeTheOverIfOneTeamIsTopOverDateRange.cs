@@ -2,20 +2,24 @@ using SportsBookAI.Core.Interfaces;
 
 namespace SportsBookAI.Core.Classes.Patterns;
 
-public class BlindlyTakeTheOverIfOneTeamIsTopOver : IPredictionPattern
+public class BlindlyTakeTheOverIfOneTeamIsTopOverDateRange : IPredictionPattern
 {
     private IAggregator _aggregator;
     private IMatch _matchData;
+    private int _daysBack;
+    private int _id;
 
-    public BlindlyTakeTheOverIfOneTeamIsTopOver(IAggregator AggregationLogic, IMatch MatchData)
+    public BlindlyTakeTheOverIfOneTeamIsTopOverDateRange(IAggregator AggregationLogic, IMatch MatchData, int DaysBack, int ID)
     {
         _aggregator = AggregationLogic;
         _matchData = MatchData;
+        _daysBack = DaysBack;
+        _id = ID;
         MakePreidction();
     }
 
-    public int ID => 1;
-    public string Name => "Blindly Take The Over If One Team Is Top Over";
+    public int ID => _id;
+    public string Name => $"Blindly Take The Over If One Team Is Top Over From The Past {_daysBack} Days";
     public bool PredictionMade { get; private set; } = false;
     public string PredictionText { get; private set; } = string.Empty;
     public string Match => _matchData.ToString() ?? "Match Data Not Available";

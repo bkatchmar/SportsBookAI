@@ -14,8 +14,6 @@ public class FlipPickOverUnderFromPreviousMatchesBetweenTwoTeams : IPredictionPa
         _aggregator = AggregationLogic;
         _matchData = MatchData;
         MakePreidction();
-
-        string? m = MatchData.ToString();
     }
 
     public int ID => 8;

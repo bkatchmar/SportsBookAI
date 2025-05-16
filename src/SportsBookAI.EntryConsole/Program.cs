@@ -16,6 +16,7 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
 // Read MongoDB settings from configuration
 AppSetting? mainSetting = configuration.GetSection("MainSetting").Get<AppSetting>();
 OutputSettings? outputSettings = configuration.GetSection("OutputSettings").Get<OutputSettings>();
+Dictionary<string, DateTime>? openingDays = configuration.GetSection("OpeningDays").Get<Dictionary<string, DateTime>>();
 
 Console.WriteLine("Getting high level settings\n");
 
@@ -45,6 +46,8 @@ switch (mainSetting?.CurrentConnection)
         break;
 }
 
+DateTime TODAY = DateTime.Today;
+
 // Connection set, ready to roll out!
 if (reposByLeague.Count > 0)
 {
@@ -73,16 +76,53 @@ if (reposByLeague.Count > 0)
         IAggregator baseAggregatorLeagueData = new BaseAggregator(repos.Key, repos.Value);
         baseAggregatorLeagueData.Aggregate();
 
-        BasePatternRepo basePredicitonRepo = new(baseAggregatorLeagueData);
-
         IList<IMatch> matchesThatNeedPredictions = allMatches.Where(m => baseAggregatorLeagueData.DoesThisMatchNeedOverUnderPrediction(m)).ToList();
         Console.WriteLine($"I need to make predictions for {matchesThatNeedPredictions.Count} Matches");
 
-        // Time to make some predictions
-        IList<IPredictionPattern> allBasePredictionPatterns = basePredicitonRepo.GetAllPredictions(matchesThatNeedPredictions);
-        foreach (IPredictionPattern pattern in allBasePredictionPatterns)
+        // Get All necessary pattern repositories, base pattern repo to start off with
+        List<IPatternRepo> allPatternRepos = [new BasePatternRepo(baseAggregatorLeagueData)];
+
+        // TODO: Start looking at possible ways to grab various date range patterns, like a last 14 days, some leagues fair better looking at this range than others
+        if (openingDays != null && openingDays.TryGetValue(repos.Key, out DateTime value))
         {
-            Console.WriteLine(pattern.PredictionText);
+            int daysPassed = (TODAY - value).Days;
+
+            // Put in 7 day lookups for `allPatternRepos`
+            if (daysPassed >= 7)
+            {
+                IAggregator pastSeventDays = new BaseAggregator(repos.Key, repos.Value, TODAY, 7);
+                pastSeventDays.Aggregate();
+                allPatternRepos.Add(new SevenDayRangePatternRepo(pastSeventDays, TODAY));
+            }
+
+            // Put in 14 day lookups for `allPatternRepos`
+            if (daysPassed >= 14)
+            {
+                IAggregator pastFourteenDays = new BaseAggregator(repos.Key, repos.Value, TODAY, 14);
+                pastFourteenDays.Aggregate();
+                allPatternRepos.Add(new SevenDayRangePatternRepo(pastFourteenDays, TODAY));
+            }
+
+            // Put in 21 day lookups for `allPatternRepos`
+            if (daysPassed >= 21)
+            {
+                IAggregator pastTwentyOneDays = new BaseAggregator(repos.Key, repos.Value, TODAY, 21);
+                pastTwentyOneDays.Aggregate();
+                allPatternRepos.Add(new SevenDayRangePatternRepo(pastTwentyOneDays, TODAY));
+            }
+        }
+
+        // Collect and write all predictions
+        List<IPredictionPattern> allPredictions = [];
+        foreach (IPatternRepo patterns in allPatternRepos)
+        {
+            // Time to make some predictions
+            IList<IPredictionPattern> currentPredictions = patterns.GetAllPredictions(matchesThatNeedPredictions);
+            foreach (IPredictionPattern pattern in currentPredictions)
+            {
+                Console.WriteLine(pattern.PredictionText);
+            }
+            allPredictions.AddRange(currentPredictions);
         }
 
         Console.WriteLine("\nWrite To File\n");
@@ -90,7 +130,7 @@ if (reposByLeague.Count > 0)
         {
             using StreamWriter writer = new(string.Concat(outputSettings?.FileDestinationToWriteTo, repos.Key, " ", "Predictions.csv"));
             using CsvWriter csv = new(writer, CultureInfo.InvariantCulture);
-            csv.WriteRecords(allBasePredictionPatterns);
+            csv.WriteRecords(allPredictions);
         }
     }
 }

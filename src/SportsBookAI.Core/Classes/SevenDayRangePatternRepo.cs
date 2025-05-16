@@ -3,19 +3,13 @@ using SportsBookAI.Core.Interfaces;
 
 namespace SportsBookAI.Core.Classes;
 
-public class BasePatternRepo(IAggregator AggregationLogic) : IPatternRepo
+public class SevenDayRangePatternRepo(IAggregator AggregationLogic, DateTime Point) : IPatternRepo
 {
     // Just add each pattern here as I make more class implementations of the IPredictionPattern
     private readonly List<Func<IAggregator, IMatch, IPredictionPattern>> _patternFactories =
     [
-        (agg, match) => new BlindlyTakeTheOverIfOneTeamIsTopOver(agg, match),
-        (agg, match) => new BlindlyTakeTheUnderIfOneTeamIsTopUnder(agg, match),
-        (agg, match) => new MakePickIfTeamInOneExtremeButNotTheOther(agg, match),
-        (agg, match) => new PickMajorityOverUnderIfBothTeamsAreMiddleOfPack(agg, match),
-        (agg, match) => new IfOneSideOfPointSpreadIsOverAmountBlindlyPick(agg, match, 0.6, 5),
-        (agg, match) => new PickPlusMinusIfOneSideRecordGreaterThanOther(agg, match),
-        (agg, match) => new PickOverUnderFromPreviousMatchesBetweenTwoTeams(agg, match),
-        (agg, match) => new FlipPickOverUnderFromPreviousMatchesBetweenTwoTeams(agg, match)
+        (agg, match) => new BlindlyTakeTheOverIfOneTeamIsTopOverDateRange(agg, match, 7, 9),
+        (agg, match) => new BlindlyTakeTheUnderIfOneTeamIsTopUnderOverDateRange(agg, match, 7, 10)
     ];
 
     public IList<IPredictionPattern> GetAllPredictions(IList<IMatch> Matches)
