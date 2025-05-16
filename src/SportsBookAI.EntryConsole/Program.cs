@@ -100,7 +100,7 @@ if (reposByLeague.Count > 0)
             {
                 IAggregator pastFourteenDays = new BaseAggregator(repos.Key, repos.Value, TODAY, 14);
                 pastFourteenDays.Aggregate();
-                allPatternRepos.Add(new SevenDayRangePatternRepo(pastFourteenDays, TODAY));
+                // allPatternRepos.Add(new SevenDayRangePatternRepo(pastFourteenDays, TODAY)); // TODO: Make a 14 Day Pattern Repo
             }
 
             // Put in 21 day lookups for `allPatternRepos`
@@ -108,7 +108,7 @@ if (reposByLeague.Count > 0)
             {
                 IAggregator pastTwentyOneDays = new BaseAggregator(repos.Key, repos.Value, TODAY, 21);
                 pastTwentyOneDays.Aggregate();
-                allPatternRepos.Add(new SevenDayRangePatternRepo(pastTwentyOneDays, TODAY));
+                // allPatternRepos.Add(new SevenDayRangePatternRepo(pastTwentyOneDays, TODAY)); // TODO: Make a 21 Day Pattern Repo
             }
         }
 
