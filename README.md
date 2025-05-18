@@ -19,11 +19,13 @@ mkdir -p src/SportsBookAI.EntryConsole
 mkdir -p src/SportsBookAI.Core
 mkdir -p tests/SportsBookAI.Core.Tests
 mkdir -p src/SportsBookAI.Core.Mongo
+mkdir -p src/SportsBookAI.Api
 
 dotnet new console -n SportsBookAI.EntryConsole -o src/SportsBookAI.EntryConsole
 dotnet new classlib -n SportsBookAI.Core -o src/SportsBookAI.Core
 dotnet new xunit -n SportsBookAI.Core.Tests -o tests/SportsBookAI.Core.Tests
 dotnet new classlib -n SportsBookAI.Core.Mongo -o src/SportsBookAI.Core.Mongo
+dotnet new webapi -n SportsBookAI.Api -o src/SportsBookAI.Api
 
 dotnet sln add src/SportsBookAI.EntryConsole/SportsBookAI.EntryConsole.csproj
 dotnet sln add src/SportsBookAI.Core/SportsBookAI.Core.csproj
@@ -33,4 +35,8 @@ dotnet sln add src/SportsBookAI.Core.Mongo/SportsBookAI.Core.Mongo.csproj
 dotnet add src/SportsBookAI.Core.Mongo/SportsBookAI.Core.Mongo.csproj reference src/SportsBookAI.Core/SportsBookAI.Core.csproj
 dotnet add src/SportsBookAI.EntryConsole/SportsBookAI.EntryConsole.csproj reference src/SportsBookAI.Core/SportsBookAI.Core.csproj
 dotnet add src/SportsBookAI.EntryConsole/SportsBookAI.EntryConsole.csproj reference src/SportsBookAI.Core.Mongo/SportsBookAI.Core.Mongo.csproj
+
+dotnet sln add src/SportsBookAI.Api/SportsBookAI.Api.csproj
+dotnet add src/SportsBookAI.Api/SportsBookAI.Api.csproj reference src/SportsBookAI.Core/SportsBookAI.Core.csproj
+dotnet add src/SportsBookAI.Api/SportsBookAI.Api.csproj reference src/SportsBookAI.Core.Mongo/SportsBookAI.Core.Mongo.csproj
 ```
