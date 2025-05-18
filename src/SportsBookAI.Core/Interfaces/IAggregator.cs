@@ -1,3 +1,5 @@
+using SportsBookAI.Core.Structs;
+
 namespace SportsBookAI.Core.Interfaces;
 
 public interface IAggregator
@@ -18,6 +20,7 @@ public interface IAggregator
     int GetTeamPlusSideLosses(string TeamName);
     IEnumerable<int> MinusWinPoints { get; }
     IEnumerable<int> MinusPlusPoints { get; }
+    IDictionary<string, List<PointSpreadRecord>> PointSpreadRecords { get; }
     void Aggregate();
     Task AggregateAsync();
     bool DoesThisMatchNeedOverUnderPrediction(IMatch MatchData);

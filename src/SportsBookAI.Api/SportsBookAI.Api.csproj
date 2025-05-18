@@ -16,8 +16,4 @@
     <ProjectReference Include="..\SportsBookAI.Core.Mongo\SportsBookAI.Core.Mongo.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

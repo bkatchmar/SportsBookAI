@@ -36,6 +36,7 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     public int GetTeamPlusSideLosses(string TeamName) => GetLosses(TeamName, PLUS);
     public IEnumerable<int> MinusWinPoints => GetWinPoints(MINUS).Distinct();
     public IEnumerable<int> MinusPlusPoints => GetWinPoints(PLUS).Distinct();
+    public IDictionary<string, List<PointSpreadRecord>> PointSpreadRecords => _pointSpreadRecords;
 
     public void Aggregate()
     {

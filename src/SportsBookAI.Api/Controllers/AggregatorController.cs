@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using SportsBookAI.Api.Models;
+using SportsBookAI.Core.Classes;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo;
 using SportsBookAI.Core.Mongo.Repositories;
@@ -7,11 +9,11 @@ namespace SportsBookAI.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TeamsController : ControllerBase
+public class AggregatorController : ControllerBase
 {
     private readonly string? _mongoDbConnectionString;
 
-    public TeamsController(IConfiguration configuration)
+    public AggregatorController(IConfiguration configuration)
     {
         _mongoDbConnectionString = configuration.GetConnectionString("MongoDb");
         if (!string.IsNullOrEmpty(_mongoDbConnectionString) && string.IsNullOrEmpty(ConnectionDetails.ConnectionString))
@@ -21,10 +23,14 @@ public class TeamsController : ControllerBase
     }
 
     [HttpGet("{league}")]
-    public async Task<IActionResult> GetTeamsByLeague(string league)
+    public async Task<IActionResult> GetTotalAggregationByLeague(string league)
     {
-        MongoSportsBookRepository repo = new(league.ToUpper().Trim());
-        IList<ITeam> allTeams = await repo.TeamRepository.GetAllAsync();
-        return Ok(allTeams);
+        string leagueName = league.ToUpper().Trim();
+        MongoSportsBookRepository repo = new(leagueName);
+        IAggregator baseAggregatorLeagueData = new BaseAggregator(leagueName, repo);
+        await baseAggregatorLeagueData.AggregateAsync();
+        
+        AggregationReturnModel rtnVal = new(baseAggregatorLeagueData);
+        return Ok(rtnVal);
     }
 }

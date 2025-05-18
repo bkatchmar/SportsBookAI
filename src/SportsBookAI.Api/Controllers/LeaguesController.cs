@@ -15,7 +15,7 @@ public class LeaguesController : ControllerBase
     {
         _leagues = options.Value.LeaguesWithData;
         _mongoDbConnectionString = configuration.GetConnectionString("MongoDb");
-        if (!string.IsNullOrEmpty(_mongoDbConnectionString))
+        if (!string.IsNullOrEmpty(_mongoDbConnectionString) && string.IsNullOrEmpty(ConnectionDetails.ConnectionString))
         {
             ConnectionDetails.ConnectionString = _mongoDbConnectionString;
         }
