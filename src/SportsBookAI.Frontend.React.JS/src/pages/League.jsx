@@ -121,8 +121,7 @@ function League() {
     async function getPredictions() {
         const getPrdictions = await axios.post(`${API_URL}/Aggregator/getPredictions`, {
             LeagueName: leagueName,
-            HomeTeam: '',
-            AwayTeam: ''
+            MatchId: ''
         });
     }
 

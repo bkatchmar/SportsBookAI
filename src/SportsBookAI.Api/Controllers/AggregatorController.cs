@@ -44,27 +44,15 @@ public class AggregatorController : ControllerBase
         await baseAggregatorLeagueData.AggregateAsync();
 
         // Make a mock match
-        IList<ITeam> allTeams = await repo.TeamRepository.GetAllAsync();
-        ITeam? homeTeam = repo.TeamRepository.GetByName(predictionReq.HomeTeam);
-        ITeam? awayTeam = repo.TeamRepository.GetByName(predictionReq.AwayTeam);
+        IMatch? lookupMatch = repo.MatchRepository.GetById(predictionReq.MatchId);
 
-        if (homeTeam == null)
+        if (lookupMatch == null)
         {
-            return NotFound($"{predictionReq.HomeTeam} Not Found In {predictionReq.LeagueName} Database");
+            return NotFound("Match Not Found");
         }
-        else if (awayTeam == null)
-        {
-            return NotFound($"{predictionReq.AwayTeam} Not Found In {predictionReq.LeagueName} Database");
-        }
-
-        IMatch mockMatch = new ApiMatch()
-        {
-            HomeTeam = homeTeam!,
-            AwayTeam = awayTeam!
-        };
 
         IPatternRepo basePatternRepo = new BasePatternRepo(baseAggregatorLeagueData);
-        IList<IPredictionPattern> currentPredictions = basePatternRepo.GetAllPredictions([mockMatch]);
+        IList<IPredictionPattern> currentPredictions = basePatternRepo.GetAllPredictions([lookupMatch]);
 
         return Ok(currentPredictions);
     }
