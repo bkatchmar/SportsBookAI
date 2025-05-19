@@ -17,7 +17,7 @@ public class FlipPickOverUnderFromPreviousMatchesBetweenTwoTeams : IPredictionPa
     }
 
     public int ID => 8;
-    public string Name => "More Over or Unders From Previous Matches Between Two Teams";
+    public string Name => "Flipped Over or Unders From Previous Matches Between Two Teams";
     public bool PredictionMade { get; private set; } = false;
     public string PredictionText { get; private set; } = string.Empty;
     public string Match => _matchData.ToString() ?? "Match Data Not Available";

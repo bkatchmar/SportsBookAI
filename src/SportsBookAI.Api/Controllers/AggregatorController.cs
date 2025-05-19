@@ -3,7 +3,6 @@ using SportsBookAI.Api.Models;
 using SportsBookAI.Core.Classes;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo;
-using SportsBookAI.Core.Mongo.Base;
 using SportsBookAI.Core.Mongo.Repositories;
 
 namespace SportsBookAI.Api.Controllers;
