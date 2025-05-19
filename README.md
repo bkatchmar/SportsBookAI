@@ -20,6 +20,7 @@ mkdir -p src/SportsBookAI.Core
 mkdir -p tests/SportsBookAI.Core.Tests
 mkdir -p src/SportsBookAI.Core.Mongo
 mkdir -p src/SportsBookAI.Api
+mkdir -p src/SportsBookAI.Frontend.React.JS
 
 dotnet new console -n SportsBookAI.EntryConsole -o src/SportsBookAI.EntryConsole
 dotnet new classlib -n SportsBookAI.Core -o src/SportsBookAI.Core
@@ -39,4 +40,7 @@ dotnet add src/SportsBookAI.EntryConsole/SportsBookAI.EntryConsole.csproj refere
 dotnet sln add src/SportsBookAI.Api/SportsBookAI.Api.csproj
 dotnet add src/SportsBookAI.Api/SportsBookAI.Api.csproj reference src/SportsBookAI.Core/SportsBookAI.Core.csproj
 dotnet add src/SportsBookAI.Api/SportsBookAI.Api.csproj reference src/SportsBookAI.Core.Mongo/SportsBookAI.Core.Mongo.csproj
+
+cd src/SportsBookAI.Frontend.React.JS
+npm create vite@latest sportsbookai-frontend-react-js -- --template react
 ```

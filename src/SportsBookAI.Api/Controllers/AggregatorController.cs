@@ -29,7 +29,7 @@ public class AggregatorController : ControllerBase
         MongoSportsBookRepository repo = new(leagueName);
         IAggregator baseAggregatorLeagueData = new BaseAggregator(leagueName, repo);
         await baseAggregatorLeagueData.AggregateAsync();
-        
+
         AggregationReturnModel rtnVal = new(baseAggregatorLeagueData);
         return Ok(rtnVal);
     }
