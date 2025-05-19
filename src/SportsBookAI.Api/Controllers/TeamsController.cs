@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using SportsBookAI.Api.Models;
 using SportsBookAI.Core.Classes;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo;
+using SportsBookAI.Core.Mongo.Base;
 using SportsBookAI.Core.Mongo.Repositories;
 
 namespace SportsBookAI.Api.Controllers;
@@ -40,7 +42,24 @@ public class TeamsController : ControllerBase
         await baseAggregatorLeagueData.AggregateAsync();
 
         IList<IMatch> matchesThatNeedPredictions = allMatches.Where(m => baseAggregatorLeagueData.DoesThisMatchNeedOverUnderPrediction(m)).ToList();
+        IList<ApiMatch> rtnVal = [];
 
-        return Ok(matchesThatNeedPredictions);
+        foreach (IMatch matchFromRepo in matchesThatNeedPredictions)
+        {
+            if (matchFromRepo is MongoMatch forApi)
+            {
+                rtnVal.Add(new()
+                {
+                    Id = forApi.Id,
+                    HomeTeam = forApi.HomeTeam,
+                    AwayTeam = forApi.AwayTeam,
+                    MatchDateTimeUTC = forApi.MatchDateTimeUTC,
+                    MatchDateTimeLocal = forApi.MatchDateTimeLocal,
+                    WeekNumber = forApi.WeekNumber
+                });
+            }
+        }
+
+        return Ok(rtnVal);
     }
 }

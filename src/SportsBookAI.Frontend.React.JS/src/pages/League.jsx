@@ -15,16 +15,17 @@ function League() {
     const MINUS = "MINUS", PLUS = "PLUS"
     const { leagueName } = useParams()
     const [aggregatorData, setAggregatorData] = useState({})
-    const [teams, setTeams] = useState([])
+    const [matchesThatNeedPredictions, setMatchesThatNeedPredictions] = useState([])
+    const [selectedMatch, setSelectedMatch] = useState('')
 
     // Similar to componentDidMount and componentDidUpdate:
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const aggregatorResult = await axios.get(`${API_URL}/Aggregator/${leagueName}`)
-                const teamsResult = await axios.get(`${API_URL}/Teams/${leagueName}`)
+                const matchesResult = await axios.get(`${API_URL}/Teams/${leagueName}/matchesThatNeedPredictions`)
                 setAggregatorData(aggregatorResult["data"])
-                setTeams(teamsResult["data"])
+                setMatchesThatNeedPredictions(matchesResult["data"])
             } catch (error) {
                 console.error('Error fetching data:', error)
             }
@@ -122,11 +123,11 @@ function League() {
         const getPrdictions = await axios.post(`${API_URL}/Aggregator/getPredictions`, {
             LeagueName: leagueName,
             MatchId: ''
-        });
+        })
     }
 
-    function renderSimulationAccordian(sportsTeams) {
-        if (sportsTeams.length == 0) {
+    function renderSimulationAccordian(matches) {
+        if (matches.length == 0) {
             return null
         } else {
             return <Accordion>
@@ -134,12 +135,14 @@ function League() {
                     <Accordion.Header>Simulate Matchup</Accordion.Header>
                     <Accordion.Body>
                         <Form>
-                            <Form.Group className="mb-1" controlId="matchup.HomeTeam">
-                                <Form.Label>Home Team</Form.Label>
-                                <Form.Select aria-label="Home Team Example">
-                                    <option></option>
-                                    {teams.map((team, index) => (
-                                        <option key={`home-team-option-${index}`} value={team["teamName"]}>{team["teamName"]}</option>
+                            <Form.Group className="mb-1" controlId="matchup.Match">
+                                <Form.Label>Match</Form.Label>
+                                <Form.Select aria-label="Pick Match" value={selectedMatch} onChange={(e) => {
+                                    setSelectedMatch(e.target.value);
+                                }}>
+                                    <option value="">Pick A Match</option>
+                                    {matches.map((match, index) => (
+                                        <option key={`home-team-option-${index}`} value={match["id"]}>{match["display"]}</option>
                                     ))}
                                 </Form.Select>
                             </Form.Group>
@@ -162,7 +165,7 @@ function League() {
             </Col>
         </Row>
         <Row>
-            {renderSimulationAccordian(teams)}
+            {renderSimulationAccordian(matchesThatNeedPredictions)}
         </Row>
     </Container>
 }
