@@ -3,6 +3,7 @@ using SportsBookAI.Api.Models;
 using SportsBookAI.Core.Classes;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo;
+using SportsBookAI.Core.Mongo.Base;
 using SportsBookAI.Core.Mongo.Repositories;
 
 namespace SportsBookAI.Api.Controllers;
@@ -32,5 +33,39 @@ public class AggregatorController : ControllerBase
 
         AggregationReturnModel rtnVal = new(baseAggregatorLeagueData);
         return Ok(rtnVal);
+    }
+
+    [HttpPost("getPredictions")]
+    public async Task<IActionResult> GetPredictions(PredictionRequest predictionReq)
+    {
+        string leagueName = predictionReq.LeagueName.ToUpper().Trim();
+        MongoSportsBookRepository repo = new(leagueName);
+        IAggregator baseAggregatorLeagueData = new BaseAggregator(leagueName, repo);
+        await baseAggregatorLeagueData.AggregateAsync();
+
+        // Make a mock match
+        IList<ITeam> allTeams = await repo.TeamRepository.GetAllAsync();
+        ITeam? homeTeam = repo.TeamRepository.GetByName(predictionReq.HomeTeam);
+        ITeam? awayTeam = repo.TeamRepository.GetByName(predictionReq.AwayTeam);
+
+        if (homeTeam == null)
+        {
+            return NotFound($"{predictionReq.HomeTeam} Not Found In {predictionReq.LeagueName} Database");
+        }
+        else if (awayTeam == null)
+        {
+            return NotFound($"{predictionReq.AwayTeam} Not Found In {predictionReq.LeagueName} Database");
+        }
+
+        IMatch mockMatch = new ApiMatch()
+        {
+            HomeTeam = homeTeam!,
+            AwayTeam = awayTeam!
+        };
+
+        IPatternRepo basePatternRepo = new BasePatternRepo(baseAggregatorLeagueData);
+        IList<IPredictionPattern> currentPredictions = basePatternRepo.GetAllPredictions([mockMatch]);
+
+        return Ok(currentPredictions);
     }
 }

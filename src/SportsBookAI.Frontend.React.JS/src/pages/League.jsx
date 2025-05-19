@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'
 import Skeleton from 'react-loading-skeleton'
+import Accordion from 'react-bootstrap/Accordion'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Table from 'react-bootstrap/Table'
+import Form from 'react-bootstrap/Form'
 
 function League() {
     const API_URL = import.meta.env.VITE_API_URL
@@ -13,13 +15,16 @@ function League() {
     const MINUS = "MINUS", PLUS = "PLUS"
     const { leagueName } = useParams()
     const [aggregatorData, setAggregatorData] = useState({})
+    const [teams, setTeams] = useState([])
 
     // Similar to componentDidMount and componentDidUpdate:
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await axios.get(`${API_URL}/Aggregator/${leagueName}`)
-                setAggregatorData(result["data"])
+                const aggregatorResult = await axios.get(`${API_URL}/Aggregator/${leagueName}`)
+                const teamsResult = await axios.get(`${API_URL}/Teams/${leagueName}`)
+                setAggregatorData(aggregatorResult["data"])
+                setTeams(teamsResult["data"])
             } catch (error) {
                 console.error('Error fetching data:', error)
             }
@@ -92,8 +97,8 @@ function League() {
                     {teamNames.map((name, index) => (
                         <tr key={`league=pointspread-card-${index}`}>
                             <td>{name}</td>
-                            <td>{returnPointSpreadRecord(data,name,MINUS)}</td>
-                            <td>{returnPointSpreadRecord(data,name,PLUS)}</td>
+                            <td>{returnPointSpreadRecord(data, name, MINUS)}</td>
+                            <td>{returnPointSpreadRecord(data, name, PLUS)}</td>
                         </tr>
                     ))}
                 </thead>
@@ -101,7 +106,7 @@ function League() {
         }
     }
 
-    function returnPointSpreadRecord(data,teamName,side) {
+    function returnPointSpreadRecord(data, teamName, side) {
         if (data["pointSpreadRecords"] && data["pointSpreadRecords"][teamName]) {
             const teamRecord = data["pointSpreadRecords"][teamName]
             for (let x = 0; x < teamRecord.length; x++) {
@@ -111,6 +116,39 @@ function League() {
         }
 
         return "0-0"
+    }
+
+    async function getPredictions() {
+        const getPrdictions = await axios.post(`${API_URL}/Aggregator/getPredictions`, {
+            LeagueName: leagueName,
+            HomeTeam: '',
+            AwayTeam: ''
+        });
+    }
+
+    function renderSimulationAccordian(sportsTeams) {
+        if (sportsTeams.length == 0) {
+            return null
+        } else {
+            return <Accordion>
+                <Accordion.Item eventKey="0">
+                    <Accordion.Header>Simulate Matchup</Accordion.Header>
+                    <Accordion.Body>
+                        <Form>
+                            <Form.Group className="mb-1" controlId="matchup.HomeTeam">
+                                <Form.Label>Home Team</Form.Label>
+                                <Form.Select aria-label="Home Team Example">
+                                    <option></option>
+                                    {teams.map((team, index) => (
+                                        <option key={`home-team-option-${index}`} value={team["teamName"]}>{team["teamName"]}</option>
+                                    ))}
+                                </Form.Select>
+                            </Form.Group>
+                        </Form>
+                    </Accordion.Body>
+                </Accordion.Item>
+            </Accordion>
+        }
     }
 
     return <Container fluid>
@@ -123,6 +161,9 @@ function League() {
                 {Object.keys(aggregatorData).length === 0 ? null : <h2>Point Spread Records By Team</h2>}
                 {returnPointSpreadsByTeamTable(aggregatorData)}
             </Col>
+        </Row>
+        <Row>
+            {renderSimulationAccordian(teams)}
         </Row>
     </Container>
 }

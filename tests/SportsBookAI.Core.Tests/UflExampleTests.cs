@@ -198,4 +198,15 @@ public class UflExampleTests
         Assert.True(prediction.PredictionMade);
         Assert.Equal("St. Louis Battlehawks Over Memphis Showboats -", prediction.PredictionText);
     }
+
+    [Fact]
+    public void LookupNullTeamActuallyReturnsNull()
+    {
+        IAggregator baseAggregatorForTestUflData = new BaseAggregator("UFL", superRepo);
+        baseAggregatorForTestUflData.Aggregate();
+
+        ITeam? nonsense = superRepo.TeamRepository.GetByName("Snickers");
+
+        Assert.Null(nonsense);
+    }
 }
