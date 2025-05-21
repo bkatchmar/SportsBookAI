@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(); 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.Configure<SportsBookAI.Api.LeaguesWithDataSetting>(builder.Configuration);
+builder.Services.Configure<SportsBookAI.Api.LeaguesWithDataSetting>(builder.Configuration.GetSection("LeaguesWithData"));
 
 // Register CORS services and define a policy
 builder.Services.AddCors(options =>
