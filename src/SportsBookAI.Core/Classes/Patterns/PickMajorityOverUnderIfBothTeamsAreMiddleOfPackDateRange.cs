@@ -2,20 +2,24 @@ using SportsBookAI.Core.Interfaces;
 
 namespace SportsBookAI.Core.Classes.Patterns;
 
-public class PickMajorityOverUnderIfBothTeamsAreMiddleOfPack : IPredictionPattern
+public class PickMajorityOverUnderIfBothTeamsAreMiddleOfPackDateRange : IPredictionPattern
 {
     private IAggregator _aggregator;
     private IMatch _matchData;
+    private int _daysBack;
+    private int _id;
 
-    public PickMajorityOverUnderIfBothTeamsAreMiddleOfPack(IAggregator AggregationLogic, IMatch MatchData)
+    public PickMajorityOverUnderIfBothTeamsAreMiddleOfPackDateRange(IAggregator AggregationLogic, IMatch MatchData, int DaysBack, int ID)
     {
         _aggregator = AggregationLogic;
         _matchData = MatchData;
+        _daysBack = DaysBack;
+        _id = ID;
         MakePreidction();
     }
 
-    public int ID => 4;
-    public string Name => "If Both Teams Are Middle Of Over Under Pack, Pick The Majority";
+    public int ID => _id;
+    public string Name => $"If Both Teams Are Middle Of Over Under Pack, Pick The Majority From The Past {_daysBack} Days";
     public bool PredictionMade { get; private set; } = false;
     public string PredictionText { get; private set; } = string.Empty;
     public string Match => _matchData.ToString() ?? "Match Data Not Available";

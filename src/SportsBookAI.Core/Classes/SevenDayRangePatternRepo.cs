@@ -10,17 +10,14 @@ public class SevenDayRangePatternRepo(IAggregator AggregationLogic, DateTime Poi
     [
         (agg, match) => new BlindlyTakeTheOverIfOneTeamIsTopOverDateRange(agg, match, 7, 9),
         (agg, match) => new BlindlyTakeTheUnderIfOneTeamIsTopUnderOverDateRange(agg, match, 7, 10),
-        (agg, match) => new MakePickIfTeamInOneExtremeButNotTheOtherOverDateRange(agg, match, 7, 11)
+        (agg, match) => new MakePickIfTeamInOneExtremeButNotTheOtherOverDateRange(agg, match, 7, 11),
+        (agg, match) => new PickMajorityOverUnderIfBothTeamsAreMiddleOfPackDateRange(agg, match, 7, 12),
+        (agg, match) => new IfOneSideOfPointSpreadIsOverAmountBlindlyPickDateRange(agg, match, 0.6, 13, 7),
+        (agg, match) => new PickPlusMinusIfOneSideRecordGreaterThanOtherDateRange(agg, match, 7, 14, Point),
+        (agg, match) => new PickOverUnderFromPreviousMatchesBetweenTwoTeamsDateRange(agg, match, 7, 15, Point),
+        (agg, match) => new FlipPickOverUnderFromPreviousMatchesBetweenTwoTeamsDateRange(agg, match, 7, 16, Point)
     ];
     
-    /*
-        (agg, match) => new PickMajorityOverUnderIfBothTeamsAreMiddleOfPack(agg, match),
-        (agg, match) => new IfOneSideOfPointSpreadIsOverAmountBlindlyPick(agg, match, 0.6, 5),
-        (agg, match) => new PickPlusMinusIfOneSideRecordGreaterThanOther(agg, match),
-        (agg, match) => new PickOverUnderFromPreviousMatchesBetweenTwoTeams(agg, match),
-        (agg, match) => new FlipPickOverUnderFromPreviousMatchesBetweenTwoTeams(agg, match)
-    */
-
     public IList<IPredictionPattern> GetAllPredictions(IList<IMatch> Matches)
     {
         IList<IPredictionPattern> rtnVal = [];

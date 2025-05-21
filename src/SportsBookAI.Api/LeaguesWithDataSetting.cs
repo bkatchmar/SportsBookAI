@@ -2,5 +2,6 @@ namespace SportsBookAI.Api;
 
 public class LeaguesWithDataSetting
 {
-    public string[] LeaguesWithData { get; set; } = [];
+    public string[] Leagues { get; set; } = [];
+    public Dictionary<string, DateTime> OpeningDays { get; set; } = [];
 }

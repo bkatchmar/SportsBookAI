@@ -13,7 +13,7 @@ public class LeaguesController : ControllerBase
 
     public LeaguesController(IOptions<LeaguesWithDataSetting> options, IConfiguration configuration)
     {
-        _leagues = options.Value.LeaguesWithData;
+        _leagues = options.Value.Leagues;
         _mongoDbConnectionString = configuration.GetConnectionString("MongoDb");
         if (!string.IsNullOrEmpty(_mongoDbConnectionString) && string.IsNullOrEmpty(ConnectionDetails.ConnectionString))
         {

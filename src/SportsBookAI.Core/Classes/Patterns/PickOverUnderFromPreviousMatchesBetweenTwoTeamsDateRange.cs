@@ -2,22 +2,28 @@ using SportsBookAI.Core.Interfaces;
 
 namespace SportsBookAI.Core.Classes.Patterns;
 
-public class PickOverUnderFromPreviousMatchesBetweenTwoTeams : IPredictionPattern
+public class PickOverUnderFromPreviousMatchesBetweenTwoTeamsDateRange : IPredictionPattern
 {
     private IAggregator _aggregator;
     private IMatch _matchData;
+    private int _id;
+    private int _daysBack;
+    private DateTime _point;
     private const string OVER = "OVER";
     private const string UNDER = "UNDER";
 
-    public PickOverUnderFromPreviousMatchesBetweenTwoTeams(IAggregator AggregationLogic, IMatch MatchData)
+    public PickOverUnderFromPreviousMatchesBetweenTwoTeamsDateRange(IAggregator AggregationLogic, IMatch MatchData, int DaysBack, int ID, DateTime Point)
     {
         _aggregator = AggregationLogic;
         _matchData = MatchData;
+        _id = ID;
+        _daysBack = DaysBack;
+        _point = Point;
         MakePreidction();
     }
 
-    public int ID => 7;
-    public string Name => "More Over or Unders From Previous Matches Between Two Teams";
+    public int ID => _id;
+    public string Name => $"More Over or Unders From Previous Matches Between Two Teams From The Past {_daysBack} Days";
     public bool PredictionMade { get; private set; } = false;
     public string PredictionText { get; private set; } = string.Empty;
     public string Match => _matchData.ToString() ?? "Match Data Not Available";
@@ -25,7 +31,7 @@ public class PickOverUnderFromPreviousMatchesBetweenTwoTeams : IPredictionPatter
     private void MakePreidction()
     {
         // Get all previous matches between these teams
-        IList<IMatch> allPreviousMatchesBetweenTwoTeams = [.. _aggregator.Repo.MatchRepository.GetAll().Where(m =>
+        IList<IMatch> allPreviousMatchesBetweenTwoTeams = [.. _aggregator.Repo.MatchRepository.GetFromDaysBack(_point, _daysBack).Where(m =>
             ((
                 (m.HomeTeam.Equals(_matchData.HomeTeam) && m.AwayTeam.Equals(_matchData.AwayTeam))
                 || (m.HomeTeam.Equals(_matchData.AwayTeam) && m.AwayTeam.Equals(_matchData.HomeTeam))
