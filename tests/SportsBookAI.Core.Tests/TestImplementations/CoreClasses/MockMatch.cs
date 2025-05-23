@@ -2,13 +2,14 @@ using SportsBookAI.Core.Interfaces;
 
 namespace SportsBookAI.Core.Tests.TestImplementations.CoreClasses;
 
-public class MockMatch : IMatch
+public class MockMatch : IAmericanFootballMatch, IMatch
 {
     public int ID { get; set; }
     public DateTime MatchDateTimeUTC { get; set; }
     public DateTime MatchDateTimeLocal { get; set; }
     public required ITeam HomeTeam { get; set; }
     public required ITeam AwayTeam { get; set; }
+    public int? WeekNumber { get; set; }
 
     public override string ToString()
     {

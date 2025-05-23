@@ -1,3 +1,4 @@
+using SportsBookAI.Core.Classes;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Structs;
 
@@ -14,4 +15,5 @@ public class AggregationReturnModel(IAggregator Aggregator)
     public IEnumerable<int> MinusWinPoints => Aggregator.MinusWinPoints;
     public IEnumerable<int> MinusPlusPoints => Aggregator.MinusPlusPoints;
     public IDictionary<string, List<PointSpreadRecord>> PointSpreadRecords => Aggregator.PointSpreadRecords;
+    public IList<AmericanFootballWeekRecord>? AllWeekRecords => (Aggregator is IAmericanFootballAggregator football) ? football.AllWeekRecords : null;
 }

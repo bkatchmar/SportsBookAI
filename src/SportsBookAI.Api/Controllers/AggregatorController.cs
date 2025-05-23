@@ -26,11 +26,26 @@ public class AggregatorController : ControllerBase
     }
 
     [HttpGet("{league}")]
-    public async Task<IActionResult> GetTotalAggregationByLeague(string league)
+    public async Task<IActionResult> GetTotalAggregationByLeague(string league, bool? usesWeeks, bool? usesPithcers)
     {
         string leagueName = league.ToUpper().Trim();
         MongoSportsBookRepository repo = new(leagueName);
-        BaseAggregator baseAggregatorLeagueData = new(leagueName, repo);
+
+        // TODO: Maybe make this a `IAggregator` factory
+        IAggregator baseAggregatorLeagueData;
+        BaseAggregator basicLevel = new(leagueName, repo);
+        if (usesWeeks.HasValue && usesWeeks.Value)
+        {
+            baseAggregatorLeagueData = new AmericanFootballAggregator(basicLevel);
+        }
+        else if (usesPithcers.HasValue && usesPithcers.Value)
+        {
+            baseAggregatorLeagueData = new BaseAggregator(leagueName, repo);
+        }
+        else
+        {
+            baseAggregatorLeagueData = basicLevel;
+        }
         await baseAggregatorLeagueData.AggregateAsync();
 
         AggregationReturnModel rtnVal = new(baseAggregatorLeagueData);

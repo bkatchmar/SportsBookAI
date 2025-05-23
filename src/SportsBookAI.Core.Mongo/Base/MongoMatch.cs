@@ -4,7 +4,7 @@ using SportsBookAI.Core.Interfaces;
 
 namespace SportsBookAI.Core.Mongo.Base;
 
-public class MongoMatch : IMatch
+public class MongoMatch : IAmericanFootballMatch, IMatch
 {
     public MongoMatch(IList<ITeam> AllTeams)
     {

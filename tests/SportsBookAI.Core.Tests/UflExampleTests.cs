@@ -209,4 +209,13 @@ public class UflExampleTests
 
         Assert.Null(nonsense);
     }
+
+    [Fact]
+    public void DoesTheMatchesAlsoActLikeFootballMatches()
+    {
+        IList<IMatch> allMatches = superRepo.MatchRepository.GetAll();
+        IMatch first = allMatches.First();
+
+        Assert.True(first is IAmericanFootballMatch);
+    }
 }

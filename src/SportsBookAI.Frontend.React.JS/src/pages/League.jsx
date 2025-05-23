@@ -8,6 +8,7 @@ import BaseAggregationTable from './components/BaseAggregationTable'
 import TeamOverUnderTable from './components/TeamOverUnderTable'
 import TeamPointSpreadsTable from './components/TeamPointSpreadsTable'
 import MatchSelectorAccordian from './components/MatchSelectorAccordian'
+import { DoesThisLeagueUseWeeks, DoesThisLeagueUsePitchers } from '../utilities/LeagueConstants'
 
 function League() {
     const API_URL = import.meta.env.VITE_API_URL
@@ -19,10 +20,13 @@ function League() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                let additionalQueryStringParameters = '';
+                if (DoesThisLeagueUseWeeks(leagueName)) additionalQueryStringParameters = '?usesWeeks=true';
+
                 const [aggRes, matchesRes] = await Promise.all([
-                    axios.get(`${API_URL}/Aggregator/${leagueName}`),
+                    axios.get(`${API_URL}/Aggregator/${leagueName}${additionalQueryStringParameters}`),
                     axios.get(`${API_URL}/Teams/${leagueName}/matchesThatNeedPredictions`)
-                ]);
+                ])
                 setAggregatorData(aggRes.data)
                 setMatchesThatNeedPredictions(matchesRes.data)
             } catch (error) {

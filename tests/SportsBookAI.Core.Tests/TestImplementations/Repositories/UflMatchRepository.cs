@@ -85,7 +85,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = houston,
                 AwayTeam = stLouis,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 1
             });
             rtnVal.Add(new()
             {
@@ -93,7 +94,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = arlington,
                 AwayTeam = sanAntonio,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 1
             });
             rtnVal.Add(new()
             {
@@ -101,7 +103,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = memphis,
                 AwayTeam = michigan,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 1
             });
             rtnVal.Add(new()
             {
@@ -109,7 +112,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = dc,
                 AwayTeam = birmingham,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 1
             });
 
             // Week 2
@@ -119,7 +123,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = michigan,
                 AwayTeam = birmingham,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 2
             });
             rtnVal.Add(new()
             {
@@ -127,7 +132,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = dc,
                 AwayTeam = memphis,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 2
             });
             rtnVal.Add(new()
             {
@@ -135,7 +141,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = arlington,
                 AwayTeam = houston,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 2
             });
             rtnVal.Add(new()
             {
@@ -143,7 +150,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = stLouis,
                 AwayTeam = sanAntonio,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 2
             });
 
             // Week 3
@@ -153,7 +161,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = birmingham,
                 AwayTeam = arlington,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 3
             });
             rtnVal.Add(new()
             {
@@ -161,7 +170,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = memphis,
                 AwayTeam = houston,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 3
             });
             rtnVal.Add(new()
             {
@@ -169,7 +179,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = michigan,
                 AwayTeam = sanAntonio,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 3
             });
             rtnVal.Add(new()
             {
@@ -177,7 +188,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = stLouis,
                 AwayTeam = dc,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 3
             });
 
             // Week 4
@@ -187,7 +199,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = michigan,
                 AwayTeam = memphis,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 4
             });
             rtnVal.Add(new()
             {
@@ -195,7 +208,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = arlington,
                 AwayTeam = stLouis,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 4
             });
             rtnVal.Add(new()
             {
@@ -203,7 +217,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = houston,
                 AwayTeam = birmingham,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 4
             });
             rtnVal.Add(new()
             {
@@ -211,7 +226,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = dc,
                 AwayTeam = sanAntonio,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 4
             });
 
             // Week 5
@@ -221,7 +237,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = birmingham,
                 AwayTeam = memphis,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 5
             });
             rtnVal.Add(new()
             {
@@ -229,7 +246,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = stLouis,
                 AwayTeam = michigan,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 5
             });
             rtnVal.Add(new()
             {
@@ -237,7 +255,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = arlington,
                 AwayTeam = dc,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 5
             });
             rtnVal.Add(new()
             {
@@ -245,7 +264,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = sanAntonio,
                 AwayTeam = houston,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 5
             });
 
             // Week 6
@@ -255,7 +275,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = stLouis,
                 AwayTeam = arlington,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 6
             });
             rtnVal.Add(new()
             {
@@ -263,7 +284,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = houston,
                 AwayTeam = memphis,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 6
             });
             rtnVal.Add(new()
             {
@@ -271,7 +293,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = michigan,
                 AwayTeam = dc,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 6
             });
             rtnVal.Add(new()
             {
@@ -279,7 +302,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = birmingham,
                 AwayTeam = sanAntonio,
                 MatchDateTimeUTC = DateTime.Parse("2025-03-28T17:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-03-28T13:00:00"),
+                WeekNumber = 6
             });
 
             // Week 7
@@ -289,7 +313,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = sanAntonio,
                 AwayTeam = dc,
                 MatchDateTimeUTC = DateTime.Parse("2025-05-09T20:00:00", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-05-09T20:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-05-09T20:00:00"),
+                WeekNumber = 7
             });
             rtnVal.Add(new()
             {
@@ -297,7 +322,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = arlington,
                 AwayTeam = michigan,
                 MatchDateTimeUTC = DateTime.Parse("2025-05-10T13:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-05-10T13:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-05-10T13:00:00"),
+                WeekNumber = 7
             });
             rtnVal.Add(new()
             {
@@ -305,7 +331,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = birmingham,
                 AwayTeam = houston,
                 MatchDateTimeUTC = DateTime.Parse("2025-05-11T12:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-05-11T12:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-05-11T12:00:00"),
+                WeekNumber = 7
             });
             rtnVal.Add(new()
             {
@@ -313,7 +340,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = memphis,
                 AwayTeam = stLouis,
                 MatchDateTimeUTC = DateTime.Parse("2025-05-11T15:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2025-05-11T15:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2025-05-11T15:00:00"),
+                WeekNumber = 7
             });
 
             // I need a fake match for testing purposes, oh well, this is a test repo class after all...
@@ -323,7 +351,8 @@ public class UflMatchRepository : IRepository<IMatch>
                 HomeTeam = stLouis,
                 AwayTeam = memphis,
                 MatchDateTimeUTC = DateTime.Parse("2026-05-11T15:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
-                MatchDateTimeLocal = DateTime.Parse("2026-05-11T15:00:00")
+                MatchDateTimeLocal = DateTime.Parse("2026-05-11T15:00:00"),
+                WeekNumber = 99
             });
         }
 
