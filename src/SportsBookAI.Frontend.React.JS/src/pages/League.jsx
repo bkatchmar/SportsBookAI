@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'
+import Breadcrumb from 'react-bootstrap/Breadcrumb'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -15,13 +16,17 @@ function League() {
     const { leagueName } = useParams()
     const [aggregatorData, setAggregatorData] = useState({})
     const [matchesThatNeedPredictions, setMatchesThatNeedPredictions] = useState([])
+    const [leagueUsesWeeks, setLeagueUsesWeeks] = useState(false)
 
     // Similar to componentDidMount and componentDidUpdate:
     useEffect(() => {
         const fetchData = async () => {
             try {
                 let additionalQueryStringParameters = '';
-                if (DoesThisLeagueUseWeeks(leagueName)) additionalQueryStringParameters = '?usesWeeks=true';
+                if (DoesThisLeagueUseWeeks(leagueName)) {
+                    additionalQueryStringParameters = '?usesWeeks=true'
+                    setLeagueUsesWeeks(true)
+                }
 
                 const [aggRes, matchesRes] = await Promise.all([
                     axios.get(`${API_URL}/Aggregator/${leagueName}${additionalQueryStringParameters}`),
@@ -40,6 +45,12 @@ function League() {
     }, [])
 
     return <Container fluid>
+        <Breadcrumb>
+            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+            <Breadcrumb.Item href="#" active>
+                {leagueName} Total Data
+            </Breadcrumb.Item>
+        </Breadcrumb>
         <Row>
             <Col className="text-center">
                 <h1>Welcome to the league data for: {leagueName}</h1>

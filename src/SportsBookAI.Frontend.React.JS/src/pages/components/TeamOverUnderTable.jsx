@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Table from 'react-bootstrap/Table'
+import OverUnderByWeekTable from './OverUnderByWeekTable'
 
 function TeamOverUnderTable(props) {
     const [aggregatorData, setAggregatorData] = useState({})
@@ -33,6 +34,7 @@ function TeamOverUnderTable(props) {
                 ))}
             </tbody>
         </Table>
+        <OverUnderByWeekTable aggregatorData={aggregatorData} />
     </>
 }
 
