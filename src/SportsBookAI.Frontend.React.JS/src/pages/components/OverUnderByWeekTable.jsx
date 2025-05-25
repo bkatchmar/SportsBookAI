@@ -11,7 +11,7 @@ function OverUnderByWeekTable(props) {
     if (Object.keys(aggregatorData).length === 0 || !aggregatorData["allWeekRecords"]) {
         return null
     }
-    const weekRecords = Object.keys(aggregatorData["allWeekRecords"])
+
     return <>
         <h2>Overs and Unders Records By Week</h2>
         <Table responsive striped hover className="mb-5">

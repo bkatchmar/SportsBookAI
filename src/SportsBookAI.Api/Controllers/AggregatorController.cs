@@ -14,6 +14,8 @@ public class AggregatorController : ControllerBase
 {
     private readonly string? _mongoDbConnectionString;
     private Dictionary<string, DateTime> _openingDays;
+    private const int SEVEN_DAYS = 7;
+    private const int FOURTEEN_DAYS = 14;
 
     public AggregatorController(IOptions<LeaguesWithDataSetting> options, IConfiguration configuration)
     {
@@ -78,9 +80,17 @@ public class AggregatorController : ControllerBase
             int daysPassed = (TODAY - value).Days;
 
             // Put in 7 day lookups for `allPatternRepos`
-            if (daysPassed >= 7)
+            if (daysPassed >= SEVEN_DAYS)
             {
-                BaseAggregator pastSeventDays = new(leagueName, repo, TODAY, 7);
+                BaseAggregator pastSeventDays = new(leagueName, repo, TODAY, SEVEN_DAYS);
+                await pastSeventDays.AggregateAsync();
+                allPatternRepos.Add(new SevenDayRangePatternRepo(pastSeventDays, TODAY));
+            }
+
+            // Put in 14 day lookups for `allPatternRepos`
+            if (daysPassed >= FOURTEEN_DAYS)
+            {
+                BaseAggregator pastSeventDays = new(leagueName, repo, TODAY, FOURTEEN_DAYS);
                 await pastSeventDays.AggregateAsync();
                 allPatternRepos.Add(new SevenDayRangePatternRepo(pastSeventDays, TODAY));
             }

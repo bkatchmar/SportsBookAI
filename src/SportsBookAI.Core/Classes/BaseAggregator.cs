@@ -140,7 +140,11 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
         // Collect data
         foreach (IPointSpread result in PointSpreads)
         {
-            _numberOfPointSpreadMatches += 1;
+            if (!string.IsNullOrEmpty(result.Result))
+            {
+                _numberOfPointSpreadMatches += 1;
+            }
+
             _ = minusWinsDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
             _ = minusWinsDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
             _ = minusLossesDict.TryAdd(result.Match.HomeTeam.TeamName, 0);

@@ -55,7 +55,7 @@ function League() {
             <Col className="text-center">
                 <h1>Welcome to the league data for: {leagueName}</h1>
                 <BaseAggregationTable aggregatorData={aggregatorData} />
-                <TeamOverUnderTable aggregatorData={aggregatorData} />
+                <TeamOverUnderTable aggregatorData={aggregatorData} leagueName={leagueName} />
                 <TeamPointSpreadsTable aggregatorData={aggregatorData} />
             </Col>
         </Row>

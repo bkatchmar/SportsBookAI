@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Table from 'react-bootstrap/Table'
 import OverUnderByWeekTable from './OverUnderByWeekTable'
 
 function TeamOverUnderTable(props) {
     const [aggregatorData, setAggregatorData] = useState({})
+    const [leagueName, setLeagueName] = useState('')
+    const makeTeamNameSlug = (teamString) => teamString.toLowerCase().replace(/\s+/g, '-')
 
     useEffect(() => {
         setAggregatorData(props.aggregatorData)
     }, [props.aggregatorData])
+
+    useEffect(() => {
+        if (props.leagueName !== leagueName) {
+            setLeagueName(props.leagueName)
+        }
+    }, [props.leagueName])
 
     if (Object.keys(aggregatorData).length === 0) {
         return null
@@ -27,7 +36,9 @@ function TeamOverUnderTable(props) {
             <tbody>
                 {teamNames.map((name, index) => (
                     <tr key={`league-overunder-card-${index}`}>
-                        <td>{name}</td>
+                        <td>
+                            <Link to={`/${leagueName}/${makeTeamNameSlug(name)}`}>{name}</Link>
+                        </td>
                         <td>{aggregatorData["oversByTeam"][name] ?? 0}</td>
                         <td>{aggregatorData["undersByTeam"][name] ?? 0}</td>
                     </tr>
