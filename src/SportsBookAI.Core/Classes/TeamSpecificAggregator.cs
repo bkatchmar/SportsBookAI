@@ -3,7 +3,7 @@ using SportsBookAI.Core.Structs;
 
 namespace SportsBookAI.Core.Classes;
 
-public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository, DateTime? Point = null, int DaysBack = -1) : IAggregator
+public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISportsBookRepository Repoository, DateTime? Point = null, int DaysBack = -1) : IAggregator
 {
     private readonly Dictionary<string, int> _oversDict = [];
     private readonly Dictionary<string, int> _undersDict = [];
@@ -154,29 +154,59 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
             _ = plusLossesDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
             _ = plusLossesDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
 
-            if (result.FavoredTeam.Equals(result.Match.HomeTeam) && result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
+            if (result.FavoredTeam.Equals(TargetTeam))
             {
-                _numberOfPointSpreadMinusWins += 1;
-                minusWinsDict[result.Match.HomeTeam.TeamName] += 1;
-                plusLossesDict[result.Match.AwayTeam.TeamName] += 1;
+                if (result.Match.HomeTeam.Equals(TargetTeam))
+                {
+                    if (result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _numberOfPointSpreadMinusWins += 1;
+                        minusWinsDict[result.Match.AwayTeam.TeamName] += 1;
+                    }
+                    else if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+                    {
+                        minusLossesDict[result.Match.AwayTeam.TeamName] += 1;
+                    }
+                }
+                else
+                {
+                    if (result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _numberOfPointSpreadMinusWins += 1;
+                        minusWinsDict[result.Match.HomeTeam.TeamName] += 1;
+                    }
+                    else if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+                    {
+                        minusLossesDict[result.Match.HomeTeam.TeamName] += 1;
+                    }
+                }
             }
-            else if (result.FavoredTeam.Equals(result.Match.AwayTeam) && result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
+            else
             {
-                _numberOfPointSpreadMinusWins += 1;
-                minusWinsDict[result.Match.AwayTeam.TeamName] += 1;
-                plusLossesDict[result.Match.HomeTeam.TeamName] += 1;
-            }
-            else if (result.FavoredTeam.Equals(result.Match.HomeTeam) && result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
-            {
-                _numberOfPointSpreadPlusWins += 1;
-                minusLossesDict[result.Match.HomeTeam.TeamName] += 1;
-                plusWinsDict[result.Match.AwayTeam.TeamName] += 1;
-            }
-            else if (result.FavoredTeam.Equals(result.Match.AwayTeam) && result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
-            {
-                _numberOfPointSpreadPlusWins += 1;
-                minusLossesDict[result.Match.AwayTeam.TeamName] += 1;
-                plusWinsDict[result.Match.HomeTeam.TeamName] += 1;
+                if (result.Match.HomeTeam.Equals(TargetTeam))
+                {
+                    if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _numberOfPointSpreadPlusWins += 1;
+                        plusWinsDict[result.Match.AwayTeam.TeamName] += 1;
+                    }
+                    else
+                    {
+                        plusLossesDict[result.Match.AwayTeam.TeamName] += 1;
+                    }
+                }
+                else
+                {
+                    if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _numberOfPointSpreadPlusWins += 1;
+                        plusWinsDict[result.Match.HomeTeam.TeamName] += 1;
+                    }
+                    else
+                    {
+                        plusLossesDict[result.Match.HomeTeam.TeamName] += 1;
+                    }
+                }
             }
         }
 
@@ -239,41 +269,93 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
 
     private IList<IOverUnder> GetAllOverUnders()
     {
+        IList<IOverUnder> allOverUnderMarks;
         if (_daysBack > -1)
         {
-            return Repo.OverUnderRepository.GetFromDaysBack(_datePoint, _daysBack);
+            allOverUnderMarks = Repo.OverUnderRepository.GetFromDaysBack(_datePoint, _daysBack);
+        }
+        else
+        {
+            allOverUnderMarks = Repo.OverUnderRepository.GetAll();
         }
 
-        return Repo.OverUnderRepository.GetAll();
+        IList<IOverUnder> rtnVal = [];
+        foreach (IOverUnder mark in allOverUnderMarks)
+        {
+            if (mark.Match.HomeTeam.Equals(TargetTeam) || mark.Match.AwayTeam.Equals(TargetTeam))
+            {
+                rtnVal.Add(mark);
+            }
+        }
+        return rtnVal;
     }
 
     private async Task<IList<IOverUnder>> GetAllOverUndersAsync()
     {
+        IList<IOverUnder> allOverUnderMarks;
         if (_daysBack > -1)
         {
-            return await Repo.OverUnderRepository.GetFromDaysBackAsync(_datePoint, _daysBack);
+            allOverUnderMarks = await Repo.OverUnderRepository.GetFromDaysBackAsync(_datePoint, _daysBack);
+        }
+        else
+        {
+            allOverUnderMarks = await Repo.OverUnderRepository.GetAllAsync();
         }
 
-        return await Repo.OverUnderRepository.GetAllAsync();
+        IList<IOverUnder> rtnVal = [];
+        foreach (IOverUnder mark in allOverUnderMarks)
+        {
+            if (mark.Match.HomeTeam.Equals(TargetTeam) || mark.Match.AwayTeam.Equals(TargetTeam))
+            {
+                rtnVal.Add(mark);
+            }
+        }
+        return rtnVal;
     }
 
     private IList<IPointSpread> GetAllPointSpreads()
     {
+        IList<IPointSpread> allOverUnderMarks;
         if (_daysBack > -1)
         {
-            return Repo.PointSpreadRepository.GetFromDaysBack(_datePoint, _daysBack);
+            allOverUnderMarks = Repo.PointSpreadRepository.GetFromDaysBack(_datePoint, _daysBack);
+        }
+        else
+        {
+            allOverUnderMarks = Repo.PointSpreadRepository.GetAll();
         }
 
-        return Repo.PointSpreadRepository.GetAll();
+        IList<IPointSpread> rtnVal = [];
+        foreach (IPointSpread spread in allOverUnderMarks)
+        {
+            if (spread.Match.HomeTeam.Equals(TargetTeam) || spread.Match.AwayTeam.Equals(TargetTeam))
+            {
+                rtnVal.Add(spread);
+            }
+        }
+        return rtnVal;
     }
-    
+
     private async Task<IList<IPointSpread>> GetAllPointSpreadsASync()
     {
+        IList<IPointSpread> allOverUnderMarks;
         if (_daysBack > -1)
         {
-            return Repo.PointSpreadRepository.GetFromDaysBack(_datePoint, _daysBack);
+            allOverUnderMarks = await Repo.PointSpreadRepository.GetFromDaysBackAsync(_datePoint, _daysBack);
         }
-        
-        return await Repo.PointSpreadRepository.GetAllAsync(); ;
+        else
+        {
+            allOverUnderMarks = await Repo.PointSpreadRepository.GetAllAsync();
+        }
+
+        IList<IPointSpread> rtnVal = [];
+        foreach (IPointSpread spread in allOverUnderMarks)
+        {
+            if (spread.Match.HomeTeam.Equals(TargetTeam) || spread.Match.AwayTeam.Equals(TargetTeam))
+            {
+                rtnVal.Add(spread);
+            }
+        }
+        return rtnVal;
     }
 }

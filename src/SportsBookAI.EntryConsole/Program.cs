@@ -58,10 +58,17 @@ if (reposByLeague.Count > 0)
     {
         Console.WriteLine($"League = {repos.Key}\n");
 
-        IAggregator baseAggregatorLeagueData = GetBaseAggregator(repos);
+        IAggregator baseAggregatorLeagueData = GetAggregator(repos);
         await baseAggregatorLeagueData.AggregateAsync();
 
-        PrintBaseAggregatorStats(baseAggregatorLeagueData);
+        await PrintBaseAggregatorStats(baseAggregatorLeagueData);
+
+        // San Antonio Brahmas Specific Example
+        Console.WriteLine("Lets Get Specific Stats Focusing on the 'San Antonio Brahmas'");
+        IAggregator brahmasData = GetAggregator(repos, "San Antonio Brahmas");
+        await brahmasData.AggregateAsync();
+
+        await PrintBaseAggregatorStats(brahmasData);
 
         Console.WriteLine("==================\n");
     }
@@ -80,8 +87,17 @@ foreach (KeyValuePair<string, ISportsBookRepository> repos in reposByLeague)
     }
 }
 
-static IAggregator GetBaseAggregator(KeyValuePair<string, ISportsBookRepository> CurrentRepo)
+static IAggregator GetAggregator(KeyValuePair<string, ISportsBookRepository> CurrentRepo, string TeamToTarget = "")
 {
+    if (!string.IsNullOrEmpty(TeamToTarget))
+    {
+        ITeam? lookup = CurrentRepo.Value.TeamRepository.GetByName(TeamToTarget);
+        if (lookup != null)
+        {
+            return new TeamSpecificAggregator(CurrentRepo.Key, lookup, CurrentRepo.Value);
+        }
+    }
+
     return new BaseAggregator(CurrentRepo.Key, CurrentRepo.Value);
 }
 
@@ -108,7 +124,7 @@ static async Task PrintBaseAggregatorStats(IAggregator Aggregator)
 static string GetPointSpreadRecordString(ITeam TeamForRecord, IDictionary<string, List<PointSpreadRecord>> PointSpreadRecords)
 {
     List<string> records = [];
-    if (PointSpreadRecords.TryGetValue(TeamForRecord.TeamName, out List<PointSpreadRecord> spreadRecord))
+    if (PointSpreadRecords.TryGetValue(TeamForRecord.TeamName, out List<PointSpreadRecord>? spreadRecord) && spreadRecord != null)
     {
         foreach (PointSpreadRecord record in spreadRecord)
         {
