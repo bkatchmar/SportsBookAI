@@ -54,6 +54,26 @@ public class AggregatorController : ControllerBase
         return Ok(rtnVal);
     }
 
+    [HttpGet("{league}/{team}")]
+    public async Task<IActionResult> GetTotalAggregationByLeague(string league, string team)
+    {
+        string leagueName = league.ToUpper().Trim();
+        string normalizedTeamName = SlugToNormalCase(team);
+        MongoSportsBookRepository repo = new(leagueName);
+        ITeam? lookup = repo.TeamRepository.GetByName(normalizedTeamName);
+
+        if (lookup == null)
+        {
+            return NotFound($"{normalizedTeamName} for {league} not found");
+        }
+
+        TeamSpecificAggregator forTeam = new(leagueName, lookup, repo);
+        await forTeam.AggregateAsync();
+
+        AggregationReturnModel rtnVal = new(forTeam);
+        return Ok(rtnVal);
+    }
+
     [HttpPost("getPredictions")]
     public async Task<IActionResult> GetPredictions(PredictionRequest predictionReq)
     {
@@ -108,4 +128,17 @@ public class AggregatorController : ControllerBase
 
         return Ok(currentPredictions);
     }
+
+    private static string SlugToNormalCase(string slug)
+    {
+        if (string.IsNullOrWhiteSpace(slug))
+            return slug;
+
+        var words = slug.Split('-');
+        var capitalizedWords = words.Select(word =>
+            char.ToUpperInvariant(word[0]) + word.Substring(1).ToLowerInvariant());
+
+        return string.Join(" ", capitalizedWords);
+    }
+
 }

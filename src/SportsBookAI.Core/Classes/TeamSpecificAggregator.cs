@@ -12,7 +12,8 @@ public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISports
     private const string UNDER = "UNDER";
     private const string PLUS = "PLUS";
     private const string MINUS = "MINUS";
-    private int _numberOfPointSpreadMatches = 0;
+    private int _numberOfPointSpreadWhereFavoredMatches = 0;
+    private int _numberOfPointSpreadWhereUnderdogMatches = 0;
     private int _numberOfPointSpreadMinusWins = 0;
     private int _numberOfPointSpreadPlusWins = 0;
 
@@ -28,8 +29,8 @@ public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISports
     public IEnumerable<int> TotalUniqueUnders => _undersDict.Values.Distinct();
     public double AllOverPercentage => CalculateUnderPercentage(OVER);
     public double AllUnderPercentage => CalculateUnderPercentage(UNDER);
-    public double AllMinusSpreadsPercentage => (_numberOfPointSpreadMatches == 0) ? 0 : (double)_numberOfPointSpreadMinusWins / _numberOfPointSpreadMatches;
-    public double AllPlusSpreadsPercentage => (_numberOfPointSpreadMatches == 0) ? 0 : (double)_numberOfPointSpreadPlusWins / _numberOfPointSpreadMatches;
+    public double AllMinusSpreadsPercentage => (_numberOfPointSpreadWhereFavoredMatches == 0) ? 0 : (double)_numberOfPointSpreadMinusWins / _numberOfPointSpreadWhereFavoredMatches;
+    public double AllPlusSpreadsPercentage => (_numberOfPointSpreadWhereUnderdogMatches == 0) ? 0 : (double)_numberOfPointSpreadPlusWins / _numberOfPointSpreadWhereUnderdogMatches;
     public int GetTeamMinusSideWins(string TeamName) => GetWins(TeamName, MINUS);
     public int GetTeamMinusSideLosses(string TeamName) => GetLosses(TeamName, MINUS);
     public int GetTeamPlusSideWins(string TeamName) => GetWins(TeamName, PLUS);
@@ -97,6 +98,8 @@ public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISports
                 _oversDict[result.Match.AwayTeam.TeamName] += 1;
             }
         }
+
+        if (_oversDict.ContainsKey(TargetTeam.TeamName)) _oversDict.Remove(TargetTeam.TeamName);
     }
 
     private void CompileUnders(IList<IOverUnder> Results)
@@ -112,6 +115,8 @@ public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISports
                 _undersDict[result.Match.AwayTeam.TeamName] += 1;
             }
         }
+
+        if (_undersDict.ContainsKey(TargetTeam.TeamName)) _undersDict.Remove(TargetTeam.TeamName);
     }
 
     private double CalculateUnderPercentage(string HitMark)
@@ -140,11 +145,6 @@ public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISports
         // Collect data
         foreach (IPointSpread result in PointSpreads)
         {
-            if (!string.IsNullOrEmpty(result.Result))
-            {
-                _numberOfPointSpreadMatches += 1;
-            }
-
             _ = minusWinsDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
             _ = minusWinsDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
             _ = minusLossesDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
@@ -180,6 +180,8 @@ public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISports
                         minusLossesDict[result.Match.HomeTeam.TeamName] += 1;
                     }
                 }
+
+                _numberOfPointSpreadWhereFavoredMatches += 1;
             }
             else
             {
@@ -207,6 +209,8 @@ public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISports
                         plusLossesDict[result.Match.HomeTeam.TeamName] += 1;
                     }
                 }
+
+                _numberOfPointSpreadWhereUnderdogMatches += 1;
             }
         }
 
@@ -219,6 +223,7 @@ public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISports
             _pointSpreadRecords[name].Add(new PointSpreadRecord(MINUS, minusWinsDict[name], minusLossesDict[name]));
             _pointSpreadRecords[name].Add(new PointSpreadRecord(PLUS, plusWinsDict[name], plusLossesDict[name]));
         }
+        if (_pointSpreadRecords.ContainsKey(TargetTeam.TeamName)) _pointSpreadRecords.Remove(TargetTeam.TeamName);
     }
 
     private int GetWins(string TeamName, string Side)
