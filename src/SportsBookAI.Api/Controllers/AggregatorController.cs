@@ -5,6 +5,9 @@ using SportsBookAI.Core.Classes;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo;
 using SportsBookAI.Core.Mongo.Repositories;
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SportsBookAI.Api.Controllers;
 
@@ -61,6 +64,12 @@ public class AggregatorController : ControllerBase
         string normalizedTeamName = SlugToNormalCase(team);
         MongoSportsBookRepository repo = new(leagueName);
         ITeam? lookup = repo.TeamRepository.GetByName(normalizedTeamName);
+
+        // First check if I can get all and just find the team name if I were to "slug" it
+        if (lookup == null)
+        {
+            lookup = repo.TeamRepository.GetAll().FirstOrDefault(t => NormalCaseToSlug(t.TeamName).Equals(team.ToLower()));
+        }
 
         if (lookup == null)
         {
@@ -134,11 +143,42 @@ public class AggregatorController : ControllerBase
         if (string.IsNullOrWhiteSpace(slug))
             return slug;
 
-        var words = slug.Split('-');
-        var capitalizedWords = words.Select(word =>
+        string[] words = slug.Split('-');
+        IEnumerable<string> capitalizedWords = words.Select(word =>
             char.ToUpperInvariant(word[0]) + word.Substring(1).ToLowerInvariant());
 
         return string.Join(" ", capitalizedWords);
     }
 
+    private static string NormalCaseToSlug(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return input;
+
+        // Normalize the string to remove accents (e.g., "é" => "e")
+        string normalized = input.Normalize(NormalizationForm.FormD);
+        var sb = new StringBuilder();
+
+        foreach (char c in normalized)
+        {
+            UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(c);
+            if (uc != UnicodeCategory.NonSpacingMark)
+            {
+                sb.Append(c);
+            }
+        }
+
+        string cleaned = sb.ToString().Normalize(NormalizationForm.FormC);
+
+        // Convert to lowercase
+        cleaned = cleaned.ToLowerInvariant();
+
+        // Replace all non-alphanumeric characters with hyphens
+        cleaned = Regex.Replace(cleaned, @"[^a-z0-9]+", "-");
+
+        // Trim any leading or trailing hyphens
+        cleaned = cleaned.Trim('-');
+
+        return cleaned;
+    }
 }
