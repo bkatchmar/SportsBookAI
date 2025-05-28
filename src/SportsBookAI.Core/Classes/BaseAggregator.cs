@@ -8,6 +8,8 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     private readonly Dictionary<string, int> _oversDict = [];
     private readonly Dictionary<string, int> _undersDict = [];
     private readonly Dictionary<string, List<PointSpreadRecord>> _pointSpreadRecords = [];
+    private readonly List<double> _allOverMarks = [];
+    private readonly List<double> _allUnderarks = [];
     private const string OVER = "OVER";
     private const string UNDER = "UNDER";
     private const string PLUS = "PLUS";
@@ -30,6 +32,12 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     public double AllUnderPercentage => CalculateUnderPercentage(UNDER);
     public double AllMinusSpreadsPercentage => (_numberOfPointSpreadMatches == 0) ? 0 : (double)_numberOfPointSpreadMinusWins / _numberOfPointSpreadMatches;
     public double AllPlusSpreadsPercentage => (_numberOfPointSpreadMatches == 0) ? 0 : (double)_numberOfPointSpreadPlusWins / _numberOfPointSpreadMatches;
+    public double HighestOverHit => _allOverMarks.Max();
+    public double LowestOverHit => _allOverMarks.Min();
+    public double AverageOverHit => _allOverMarks.Average();
+    public double HighestUnderHit => _allUnderarks.Max();
+    public double LowestUnderHit => _allUnderarks.Min();
+    public double AverageUnderHit => _allUnderarks.Average();
     public int GetTeamMinusSideWins(string TeamName) => GetWins(TeamName, MINUS);
     public int GetTeamMinusSideLosses(string TeamName) => GetLosses(TeamName, MINUS);
     public int GetTeamPlusSideWins(string TeamName) => GetWins(TeamName, PLUS);
@@ -95,6 +103,7 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
             {
                 _oversDict[result.Match.HomeTeam.TeamName] += 1;
                 _oversDict[result.Match.AwayTeam.TeamName] += 1;
+                _allOverMarks.Add(result.Mark);
             }
         }
     }
@@ -110,6 +119,7 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
             {
                 _undersDict[result.Match.HomeTeam.TeamName] += 1;
                 _undersDict[result.Match.AwayTeam.TeamName] += 1;
+                _allUnderarks.Add(result.Mark);
             }
         }
     }

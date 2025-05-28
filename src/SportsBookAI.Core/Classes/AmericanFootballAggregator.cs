@@ -21,6 +21,12 @@ public class AmericanFootballAggregator(IAggregator BaseLevel) : IAmericanFootba
     public double AllUnderPercentage => BaseLevel.AllUnderPercentage;
     public double AllMinusSpreadsPercentage => BaseLevel.AllMinusSpreadsPercentage;
     public double AllPlusSpreadsPercentage => BaseLevel.AllPlusSpreadsPercentage;
+    public double HighestOverHit => BaseLevel.HighestOverHit;
+    public double LowestOverHit => BaseLevel.LowestOverHit;
+    public double AverageOverHit => BaseLevel.AverageOverHit;
+    public double HighestUnderHit => BaseLevel.HighestUnderHit;
+    public double LowestUnderHit => BaseLevel.LowestUnderHit;
+    public double AverageUnderHit => BaseLevel.AverageUnderHit;
     public int GetTeamMinusSideWins(string TeamName) => BaseLevel.GetTeamMinusSideWins(TeamName);
     public int GetTeamMinusSideLosses(string TeamName) => BaseLevel.GetTeamMinusSideLosses(TeamName);
     public int GetTeamPlusSideWins(string TeamName) => BaseLevel.GetTeamPlusSideWins(TeamName);

@@ -12,6 +12,12 @@ public class AggregationReturnModel(IAggregator Aggregator)
     public double AllUnderPercentage => Aggregator.AllUnderPercentage;
     public double AllMinusSpreadsPercentage => Aggregator.AllMinusSpreadsPercentage;
     public double AllPlusSpreadsPercentage => Aggregator.AllPlusSpreadsPercentage;
+    public double HighestOverHit => Aggregator.HighestOverHit;
+    public double LowestOverHit => Aggregator.LowestOverHit;
+    public double AverageOverHit => Aggregator.AverageOverHit;
+    public double HighestUnderHit => Aggregator.HighestUnderHit;
+    public double LowestUnderHit => Aggregator.LowestUnderHit;
+    public double AverageUnderHit => Aggregator.AverageUnderHit;
     public IEnumerable<int> MinusWinPoints => Aggregator.MinusWinPoints;
     public IEnumerable<int> MinusPlusPoints => Aggregator.MinusPlusPoints;
     public IDictionary<string, List<PointSpreadRecord>> PointSpreadRecords => Aggregator.PointSpreadRecords;

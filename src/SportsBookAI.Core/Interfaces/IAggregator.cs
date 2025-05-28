@@ -14,6 +14,12 @@ public interface IAggregator
     double AllUnderPercentage { get; }
     double AllMinusSpreadsPercentage { get; }
     double AllPlusSpreadsPercentage { get; }
+    double HighestOverHit { get; }
+    double LowestOverHit { get; }
+    double AverageOverHit { get; }
+    double HighestUnderHit { get; }
+    double LowestUnderHit { get; }
+    double AverageUnderHit { get; }
     int GetTeamMinusSideWins(string TeamName);
     int GetTeamMinusSideLosses(string TeamName);
     int GetTeamPlusSideWins(string TeamName);

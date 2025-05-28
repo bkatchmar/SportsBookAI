@@ -60,14 +60,12 @@ if (reposByLeague.Count > 0)
 
         IAggregator baseAggregatorLeagueData = GetAggregator(repos);
         await baseAggregatorLeagueData.AggregateAsync();
-
         await PrintBaseAggregatorStats(baseAggregatorLeagueData);
 
         // San Antonio Brahmas Specific Example
         Console.WriteLine("Lets Get Specific Stats Focusing on the 'San Antonio Brahmas'");
         IAggregator brahmasData = GetAggregator(repos, "San Antonio Brahmas");
         await brahmasData.AggregateAsync();
-
         await PrintBaseAggregatorStats(brahmasData);
 
         Console.WriteLine("==================\n");
@@ -106,7 +104,13 @@ static async Task PrintBaseAggregatorStats(IAggregator Aggregator)
     Console.WriteLine($"Total Over Percentage: {Aggregator.AllOverPercentage.ToString("P2")}");
     Console.WriteLine($"Total Under Percentage: {Aggregator.AllUnderPercentage.ToString("P2")}");
     Console.WriteLine($"Total Minus Percentage: {Aggregator.AllMinusSpreadsPercentage.ToString("P2")}");
-    Console.WriteLine($"Total Plus Percentage: {Aggregator.AllPlusSpreadsPercentage.ToString("P2")}\n");
+    Console.WriteLine($"Total Plus Percentage: {Aggregator.AllPlusSpreadsPercentage.ToString("P2")}");
+    Console.WriteLine($"Highest Over: {Aggregator.HighestOverHit.ToString("N2")}");
+    Console.WriteLine($"Lowest Over: {Aggregator.LowestOverHit.ToString("N2")}");
+    Console.WriteLine($"Average Over Mark: {Aggregator.AverageOverHit.ToString("N2")}");
+    Console.WriteLine($"Highest Under: {Aggregator.HighestUnderHit.ToString("N2")}");
+    Console.WriteLine($"Lowest Under: {Aggregator.LowestUnderHit.ToString("N2")}");
+    Console.WriteLine($"Average Under Mark: {Aggregator.AverageUnderHit.ToString("N2")}\n");
 
     IList<ITeam> allTeamsFromLeague = await Aggregator.Repo.TeamRepository.GetAllAsync();
 
