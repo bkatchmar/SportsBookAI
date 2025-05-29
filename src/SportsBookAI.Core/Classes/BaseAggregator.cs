@@ -32,12 +32,12 @@ public class BaseAggregator(string LeagueName, ISportsBookRepository Repoository
     public double AllUnderPercentage => CalculateUnderPercentage(UNDER);
     public double AllMinusSpreadsPercentage => (_numberOfPointSpreadMatches == 0) ? 0 : (double)_numberOfPointSpreadMinusWins / _numberOfPointSpreadMatches;
     public double AllPlusSpreadsPercentage => (_numberOfPointSpreadMatches == 0) ? 0 : (double)_numberOfPointSpreadPlusWins / _numberOfPointSpreadMatches;
-    public double HighestOverHit => _allOverMarks.Max();
-    public double LowestOverHit => _allOverMarks.Min();
-    public double AverageOverHit => _allOverMarks.Average();
-    public double HighestUnderHit => _allUnderarks.Max();
-    public double LowestUnderHit => _allUnderarks.Min();
-    public double AverageUnderHit => _allUnderarks.Average();
+    public double HighestOverHit => _allOverMarks.Any() ? _allOverMarks.Max() : 0;
+    public double LowestOverHit => _allOverMarks.Any() ? _allOverMarks.Min() : 0;
+    public double AverageOverHit => _allOverMarks.Any() ? _allOverMarks.Average() : 0;
+    public double HighestUnderHit => _allUnderarks.Any() ? _allUnderarks.Max() : 0;
+    public double LowestUnderHit => _allUnderarks.Any() ? _allUnderarks.Min() : 0;
+    public double AverageUnderHit => _allUnderarks.Any() ? _allUnderarks.Average() : 0;
     public int GetTeamMinusSideWins(string TeamName) => GetWins(TeamName, MINUS);
     public int GetTeamMinusSideLosses(string TeamName) => GetLosses(TeamName, MINUS);
     public int GetTeamPlusSideWins(string TeamName) => GetWins(TeamName, PLUS);

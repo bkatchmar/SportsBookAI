@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import BaseAggregationTable from './components/BaseAggregationTable'
+import SecondaryAggregationTable from './components/SecondaryAggregationTable'
 import TeamOverUnderTable from './components/TeamOverUnderTable'
 import TeamPointSpreadsTable from './components/TeamPointSpreadsTable'
 import MatchSelectorAccordian from './components/MatchSelectorAccordian'
@@ -55,6 +56,7 @@ function League() {
             <Col className="text-center">
                 <h1>Welcome to the league data for: {leagueName}</h1>
                 <BaseAggregationTable aggregatorData={aggregatorData} />
+                <SecondaryAggregationTable aggregatorData={aggregatorData} />
                 <TeamOverUnderTable aggregatorData={aggregatorData} leagueName={leagueName} />
                 <TeamPointSpreadsTable aggregatorData={aggregatorData} />
             </Col>
