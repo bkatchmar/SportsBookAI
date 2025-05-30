@@ -26,15 +26,38 @@ public class IfOneSideOfPointSpreadIsOverAmountBlindlyPick : IPredictionPattern
 
     private void MakePreidction()
     {
-        if (_aggregator.AllPlusSpreadsPercentage >= _threshold)
+        IList<IPointSpread> allPointSpreads = _aggregator.Repo.PointSpreadRepository.GetAll();
+        IPointSpread? lookup = allPointSpreads.FirstOrDefault(p => p.Match.Equals(_matchData));
+
+        if (lookup != null)
         {
-            PredictionMade = true;
-            PredictionText = $"{_matchData.AwayTeam.TeamName}/{_matchData.HomeTeam.TeamName} +";
-        }
-        else if (_aggregator.AllMinusSpreadsPercentage >= _threshold)
-        {
-            PredictionMade = true;
-            PredictionText = $"{_matchData.AwayTeam.TeamName}/{_matchData.HomeTeam.TeamName} -";
+            ITeam favoredTeam = lookup.FavoredTeam;
+            ITeam underdog = lookup.FavoredTeam.Equals(_matchData.HomeTeam) ? _matchData.AwayTeam : _matchData.HomeTeam;
+
+            if (_aggregator.AllPlusSpreadsPercentage >= _threshold)
+            {
+                PredictionMade = true;
+                if (_matchData.AwayTeam.Equals(underdog))
+                {
+                    PredictionText = $"{_matchData.AwayTeam.TeamName} Over {_matchData.HomeTeam.TeamName} +";
+                }
+                else
+                {
+                    PredictionText = $"{_matchData.HomeTeam.TeamName} Over {_matchData.AwayTeam.TeamName} +";
+                }
+            }
+            else if (_aggregator.AllMinusSpreadsPercentage >= _threshold)
+            {
+                PredictionMade = true;
+                if (_matchData.AwayTeam.Equals(favoredTeam))
+                {
+                    PredictionText = $"{_matchData.AwayTeam.TeamName} Over {_matchData.HomeTeam.TeamName} -";
+                }
+                else
+                {
+                    PredictionText = $"{_matchData.HomeTeam.TeamName} Over {_matchData.AwayTeam.TeamName} -";
+                }
+            }
         }
     }
 
