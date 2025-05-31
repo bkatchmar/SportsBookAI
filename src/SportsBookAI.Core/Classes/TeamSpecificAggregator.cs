@@ -164,63 +164,66 @@ public class TeamSpecificAggregator(string LeagueName, ITeam TargetTeam, ISports
             _ = plusLossesDict.TryAdd(result.Match.HomeTeam.TeamName, 0);
             _ = plusLossesDict.TryAdd(result.Match.AwayTeam.TeamName, 0);
 
-            if (result.FavoredTeam.Equals(TargetTeam))
+            if (!string.IsNullOrEmpty(result.Result))
             {
-                if (result.Match.HomeTeam.Equals(TargetTeam))
+                if (result.FavoredTeam.Equals(TargetTeam))
                 {
-                    if (result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
+                    if (result.Match.HomeTeam.Equals(TargetTeam))
                     {
-                        _numberOfPointSpreadMinusWins += 1;
-                        minusWinsDict[result.Match.AwayTeam.TeamName] += 1;
-                    }
-                    else if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
-                    {
-                        minusLossesDict[result.Match.AwayTeam.TeamName] += 1;
-                    }
-                }
-                else
-                {
-                    if (result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
-                    {
-                        _numberOfPointSpreadMinusWins += 1;
-                        minusWinsDict[result.Match.HomeTeam.TeamName] += 1;
-                    }
-                    else if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
-                    {
-                        minusLossesDict[result.Match.HomeTeam.TeamName] += 1;
-                    }
-                }
-
-                _numberOfPointSpreadWhereFavoredMatches += 1;
-            }
-            else
-            {
-                if (result.Match.HomeTeam.Equals(TargetTeam))
-                {
-                    if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
-                    {
-                        _numberOfPointSpreadPlusWins += 1;
-                        plusWinsDict[result.Match.AwayTeam.TeamName] += 1;
+                        if (result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
+                        {
+                            _numberOfPointSpreadMinusWins += 1;
+                            minusWinsDict[result.Match.AwayTeam.TeamName] += 1;
+                        }
+                        else if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+                        {
+                            minusLossesDict[result.Match.AwayTeam.TeamName] += 1;
+                        }
                     }
                     else
                     {
-                        plusLossesDict[result.Match.AwayTeam.TeamName] += 1;
+                        if (result.Result.Equals(MINUS, StringComparison.OrdinalIgnoreCase))
+                        {
+                            _numberOfPointSpreadMinusWins += 1;
+                            minusWinsDict[result.Match.HomeTeam.TeamName] += 1;
+                        }
+                        else if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+                        {
+                            minusLossesDict[result.Match.HomeTeam.TeamName] += 1;
+                        }
                     }
+
+                    _numberOfPointSpreadWhereFavoredMatches += 1;
                 }
                 else
                 {
-                    if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+                    if (result.Match.HomeTeam.Equals(TargetTeam))
                     {
-                        _numberOfPointSpreadPlusWins += 1;
-                        plusWinsDict[result.Match.HomeTeam.TeamName] += 1;
+                        if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+                        {
+                            _numberOfPointSpreadPlusWins += 1;
+                            plusWinsDict[result.Match.AwayTeam.TeamName] += 1;
+                        }
+                        else
+                        {
+                            plusLossesDict[result.Match.AwayTeam.TeamName] += 1;
+                        }
                     }
                     else
                     {
-                        plusLossesDict[result.Match.HomeTeam.TeamName] += 1;
+                        if (result.Result.Equals(PLUS, StringComparison.OrdinalIgnoreCase))
+                        {
+                            _numberOfPointSpreadPlusWins += 1;
+                            plusWinsDict[result.Match.HomeTeam.TeamName] += 1;
+                        }
+                        else
+                        {
+                            plusLossesDict[result.Match.HomeTeam.TeamName] += 1;
+                        }
                     }
-                }
 
-                _numberOfPointSpreadWhereUnderdogMatches += 1;
+                    _numberOfPointSpreadWhereUnderdogMatches += 1;
+                }
             }
         }
 

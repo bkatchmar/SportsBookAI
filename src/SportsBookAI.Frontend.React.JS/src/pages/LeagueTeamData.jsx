@@ -6,10 +6,9 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import BaseAggregationTable from './components/BaseAggregationTable'
+import SecondaryAggregationTable from './components/SecondaryAggregationTable'
 import TeamOverUnderTable from './components/TeamOverUnderTable'
 import TeamPointSpreadsTable from './components/TeamPointSpreadsTable'
-import MatchSelectorAccordian from './components/MatchSelectorAccordian'
-import { DoesThisLeagueUseWeeks, DoesThisLeagueUsePitchers } from '../utilities/LeagueConstants'
 
 function LeagueTeamData() {
     const API_URL = import.meta.env.VITE_API_URL
@@ -55,7 +54,9 @@ function LeagueTeamData() {
             <Col className="text-center">
                 <h1>Welcome to the league data for the team: {makeStringNormalCase(teamName)}</h1>
                 <BaseAggregationTable aggregatorData={aggregatorData} />
+                <SecondaryAggregationTable aggregatorData={aggregatorData} />
                 <TeamOverUnderTable aggregatorData={aggregatorData} leagueName={leagueName} />
+                <TeamPointSpreadsTable aggregatorData={aggregatorData} />
             </Col>
         </Row>
     </Container>
