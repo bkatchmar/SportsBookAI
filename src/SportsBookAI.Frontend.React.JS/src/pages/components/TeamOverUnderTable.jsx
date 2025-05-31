@@ -22,7 +22,7 @@ function TeamOverUnderTable(props) {
         return null
     }
 
-    const teamNames = Object.keys(aggregatorData["oversByTeam"])
+    const teamNames = Object.keys(aggregatorData["oversByTeam"]).sort()
     return <>
         <h2>Overs and Unders By Team</h2>
         <Table responsive striped hover className="mb-5">
