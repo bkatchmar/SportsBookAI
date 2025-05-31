@@ -1,13 +1,9 @@
-﻿using System.Globalization;
-using System.Net.NetworkInformation;
-using System.Threading.Tasks;
-using CsvHelper;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using SportsBookAI.Core.Classes;
+using SportsBookAI.Core.Classes.Patterns;
 using SportsBookAI.Core.Interfaces;
 using SportsBookAI.Core.Mongo;
 using SportsBookAI.Core.Mongo.Repositories;
-using SportsBookAI.Core.Structs;
 using SportsBookAI.EntryConsole.SettingsModels;
 
 // Program Start
@@ -69,6 +65,9 @@ if (reposByLeague.Count > 0)
         foreach (IMatch match in matchesThatNeedPredictions)
         {
             Console.WriteLine(match.ToString());
+
+            TakeAverageOverUnderMarkIntoConsiderationBetweenTwoTeams newPredictionPattern = new(baseAggregatorLeagueData, match, 25, DateTime.Today, MarkUsing: 173);
+            Console.WriteLine(newPredictionPattern.PredictionText);
         }
 
         Console.WriteLine("==================\n");
@@ -86,58 +85,4 @@ foreach (KeyValuePair<string, ISportsBookRepository> repos in reposByLeague)
     {
         obj.Dispose();
     }
-}
-
-static IAggregator GetAggregator(KeyValuePair<string, ISportsBookRepository> CurrentRepo, string TeamToTarget = "")
-{
-    if (!string.IsNullOrEmpty(TeamToTarget))
-    {
-        ITeam? lookup = CurrentRepo.Value.TeamRepository.GetByName(TeamToTarget);
-        if (lookup != null)
-        {
-            return new TeamSpecificAggregator(CurrentRepo.Key, lookup, CurrentRepo.Value);
-        }
-    }
-
-    return new BaseAggregator(CurrentRepo.Key, CurrentRepo.Value);
-}
-
-static async Task PrintBaseAggregatorStats(IAggregator Aggregator)
-{
-    Console.WriteLine($"Total Over Percentage: {Aggregator.AllOverPercentage.ToString("P2")}");
-    Console.WriteLine($"Total Under Percentage: {Aggregator.AllUnderPercentage.ToString("P2")}");
-    Console.WriteLine($"Total Minus Percentage: {Aggregator.AllMinusSpreadsPercentage.ToString("P2")}");
-    Console.WriteLine($"Total Plus Percentage: {Aggregator.AllPlusSpreadsPercentage.ToString("P2")}");
-    Console.WriteLine($"Highest Over: {Aggregator.HighestOverHit.ToString("N2")}");
-    Console.WriteLine($"Lowest Over: {Aggregator.LowestOverHit.ToString("N2")}");
-    Console.WriteLine($"Average Over Mark: {Aggregator.AverageOverHit.ToString("N2")}");
-    Console.WriteLine($"Highest Under: {Aggregator.HighestUnderHit.ToString("N2")}");
-    Console.WriteLine($"Lowest Under: {Aggregator.LowestUnderHit.ToString("N2")}");
-    Console.WriteLine($"Average Under Mark: {Aggregator.AverageUnderHit.ToString("N2")}\n");
-
-    IList<ITeam> allTeamsFromLeague = await Aggregator.Repo.TeamRepository.GetAllAsync();
-
-    foreach (ITeam team in allTeamsFromLeague)
-    {
-        Console.WriteLine($"Stats For {team}\n");
-
-        if (Aggregator.OversByTeam.TryGetValue(team.TeamName, out int overMarks)) Console.WriteLine($"{overMarks} Over Mark(s)");
-        if (Aggregator.UndersByTeam.TryGetValue(team.TeamName, out int underMarks)) Console.WriteLine($"{underMarks} Under Mark(s)");
-        Console.WriteLine(GetPointSpreadRecordString(team, Aggregator.PointSpreadRecords));
-        Console.WriteLine("\n");
-    }
-}
-
-static string GetPointSpreadRecordString(ITeam TeamForRecord, IDictionary<string, List<PointSpreadRecord>> PointSpreadRecords)
-{
-    List<string> records = [];
-    if (PointSpreadRecords.TryGetValue(TeamForRecord.TeamName, out List<PointSpreadRecord>? spreadRecord) && spreadRecord != null)
-    {
-        foreach (PointSpreadRecord record in spreadRecord)
-        {
-            records.Add($"{record.Side} Side; {record.Wins} Win(s); {record.Losses} Loss(es)");
-        }
-        return string.Join("\n", [.. records]);
-    }
-    return "\n";
 }
