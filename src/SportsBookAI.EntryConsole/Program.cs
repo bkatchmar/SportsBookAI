@@ -58,15 +58,18 @@ if (reposByLeague.Count > 0)
     {
         Console.WriteLine($"League = {repos.Key}\n");
 
-        IAggregator baseAggregatorLeagueData = GetAggregator(repos);
-        await baseAggregatorLeagueData.AggregateAsync();
-        await PrintBaseAggregatorStats(baseAggregatorLeagueData);
+        MongoSportsBookRepository repo = new(repos.Key);
+        IList<IMatch> allMatches = await repo.MatchRepository.GetAllAsync();
 
-        // San Antonio Brahmas Specific Example
-        Console.WriteLine("Lets Get Specific Stats Focusing on the 'San Antonio Brahmas'");
-        IAggregator brahmasData = GetAggregator(repos, "San Antonio Brahmas");
-        await brahmasData.AggregateAsync();
-        await PrintBaseAggregatorStats(brahmasData);
+        BaseAggregator baseAggregatorLeagueData = new(repos.Key, repo);
+        await baseAggregatorLeagueData.AggregateAsync();
+
+        IList<IMatch> matchesThatNeedPredictions = [.. allMatches.Where(m => baseAggregatorLeagueData.DoesThisMatchNeedOverUnderPrediction(m))];
+
+        foreach (IMatch match in matchesThatNeedPredictions)
+        {
+            Console.WriteLine(match.ToString());
+        }
 
         Console.WriteLine("==================\n");
     }
@@ -134,7 +137,7 @@ static string GetPointSpreadRecordString(ITeam TeamForRecord, IDictionary<string
         {
             records.Add($"{record.Side} Side; {record.Wins} Win(s); {record.Losses} Loss(es)");
         }
-        return string.Join("\n", [..records]);
+        return string.Join("\n", [.. records]);
     }
     return "\n";
 }

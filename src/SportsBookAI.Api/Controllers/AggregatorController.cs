@@ -121,7 +121,7 @@ public class AggregatorController : ControllerBase
             {
                 BaseAggregator pastSeventDays = new(leagueName, repo, TODAY, FOURTEEN_DAYS);
                 await pastSeventDays.AggregateAsync();
-                allPatternRepos.Add(new SevenDayRangePatternRepo(pastSeventDays, TODAY));
+                allPatternRepos.Add(new FourteenDayRangePatternRepo(pastSeventDays, TODAY));
             }
         }
 
