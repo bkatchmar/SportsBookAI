@@ -3,7 +3,7 @@ using SportsBookAI.Core.Interfaces;
 
 namespace SportsBookAI.Core.Classes;
 
-public class BasePatternRepo(IAggregator AggregationLogic) : IPatternRepo
+public class BasePatternRepo(IAggregator AggregationLogic, double MarkUsing = -1) : IPatternRepo
 {
     // Just add each pattern here as I make more class implementations of the IPredictionPattern
     private readonly List<Func<IAggregator, IMatch, IPredictionPattern>> _patternFactories =
@@ -15,7 +15,8 @@ public class BasePatternRepo(IAggregator AggregationLogic) : IPatternRepo
         (agg, match) => new IfOneSideOfPointSpreadIsOverAmountBlindlyPick(agg, match, 0.6, 5),
         (agg, match) => new PickPlusMinusIfOneSideRecordGreaterThanOther(agg, match),
         (agg, match) => new PickOverUnderFromPreviousMatchesBetweenTwoTeams(agg, match),
-        (agg, match) => new FlipPickOverUnderFromPreviousMatchesBetweenTwoTeams(agg, match)
+        (agg, match) => new FlipPickOverUnderFromPreviousMatchesBetweenTwoTeams(agg, match),
+        (agg, match) => new TakeAverageOverUnderMarkIntoConsiderationBetweenTwoTeams(agg, match, 25, DateTime.Today, MarkUsing: MarkUsing)
     ];
 
     public IList<IPredictionPattern> GetAllPredictions(IList<IMatch> Matches)

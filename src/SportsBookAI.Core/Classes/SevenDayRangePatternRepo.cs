@@ -3,7 +3,7 @@ using SportsBookAI.Core.Interfaces;
 
 namespace SportsBookAI.Core.Classes;
 
-public class SevenDayRangePatternRepo(IAggregator AggregationLogic, DateTime Point) : IPatternRepo
+public class SevenDayRangePatternRepo(IAggregator AggregationLogic, DateTime Point, double MarkUsing = -1) : IPatternRepo
 {
     // Just add each pattern here as I make more class implementations of the IPredictionPattern
     private readonly List<Func<IAggregator, IMatch, IPredictionPattern>> _patternFactories =
@@ -15,7 +15,8 @@ public class SevenDayRangePatternRepo(IAggregator AggregationLogic, DateTime Poi
         (agg, match) => new IfOneSideOfPointSpreadIsOverAmountBlindlyPickDateRange(agg, match, 0.6, 13, 7),
         (agg, match) => new PickPlusMinusIfOneSideRecordGreaterThanOtherDateRange(agg, match, 7, 14, Point),
         (agg, match) => new PickOverUnderFromPreviousMatchesBetweenTwoTeamsDateRange(agg, match, 7, 15, Point),
-        (agg, match) => new FlipPickOverUnderFromPreviousMatchesBetweenTwoTeamsDateRange(agg, match, 7, 16, Point)
+        (agg, match) => new FlipPickOverUnderFromPreviousMatchesBetweenTwoTeamsDateRange(agg, match, 7, 16, Point),
+        (agg, match) => new TakeAverageOverUnderMarkIntoConsiderationBetweenTwoTeams(agg, match, 26, Point, 7, MarkUsing: MarkUsing)
     ];
     
     public IList<IPredictionPattern> GetAllPredictions(IList<IMatch> Matches)

@@ -102,7 +102,7 @@ public class AggregatorController : ControllerBase
 
         // Init collection and get the base pattern first, we will add the other pattern repos as needed
         IList<IPatternRepo> allPatternRepos = [];
-        allPatternRepos.Add(new BasePatternRepo(baseAggregatorLeagueData));
+        allPatternRepos.Add(new BasePatternRepo(baseAggregatorLeagueData, predictionReq.OverUnderMark.HasValue ? predictionReq.OverUnderMark.Value : -1));
 
         if (_openingDays.TryGetValue(leagueName, out DateTime value))
         {
@@ -113,7 +113,7 @@ public class AggregatorController : ControllerBase
             {
                 BaseAggregator pastSeventDays = new(leagueName, repo, TODAY, SEVEN_DAYS);
                 await pastSeventDays.AggregateAsync();
-                allPatternRepos.Add(new SevenDayRangePatternRepo(pastSeventDays, TODAY));
+                allPatternRepos.Add(new SevenDayRangePatternRepo(pastSeventDays, TODAY, predictionReq.OverUnderMark.HasValue ? predictionReq.OverUnderMark.Value : -1));
             }
 
             // Put in 14 day lookups for `allPatternRepos`
@@ -121,7 +121,7 @@ public class AggregatorController : ControllerBase
             {
                 BaseAggregator pastSeventDays = new(leagueName, repo, TODAY, FOURTEEN_DAYS);
                 await pastSeventDays.AggregateAsync();
-                allPatternRepos.Add(new FourteenDayRangePatternRepo(pastSeventDays, TODAY));
+                allPatternRepos.Add(new FourteenDayRangePatternRepo(pastSeventDays, TODAY, predictionReq.OverUnderMark.HasValue ? predictionReq.OverUnderMark.Value : -1));
             }
         }
 
