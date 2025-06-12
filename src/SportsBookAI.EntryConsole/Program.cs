@@ -66,8 +66,9 @@ if (reposByLeague.Count > 0)
         {
             Console.WriteLine(match.ToString());
 
-            TakeAverageOverUnderMarkIntoConsiderationBetweenTwoTeams newPredictionPattern = new(baseAggregatorLeagueData, match, 25, DateTime.Today, MarkUsing: 173);
-            Console.WriteLine(newPredictionPattern.PredictionText);
+            // TakeAverageOverUnderMarkIntoConsiderationBetweenTwoTeams newPredictionPattern = new(baseAggregatorLeagueData, match, 25, DateTime.Today, MarkUsing: 173);
+            // Console.WriteLine(newPredictionPattern.PredictionText);
+            // Highest ID; 27
         }
 
         Console.WriteLine("==================\n");

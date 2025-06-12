@@ -13,7 +13,7 @@ public class FourteenDayRangePatternRepo(IAggregator AggregationLogic, DateTime 
         (agg, match) => new MakePickIfTeamInOneExtremeButNotTheOtherOverDateRange(agg, match, 14, 19),
         (agg, match) => new PickMajorityOverUnderIfBothTeamsAreMiddleOfPackDateRange(agg, match, 14, 20),
         (agg, match) => new IfOneSideOfPointSpreadIsOverAmountBlindlyPickDateRange(agg, match, 0.6, 21, 14),
-        (agg, match) => new PickPlusMinusIfOneSideRecordGreaterThanOtherDateRange(agg, match, 14, 22, Point),
+        (agg, match) => new PickPlusMinusIfOneSideRecordGreaterThanOtherDateRange(agg, match, 14, 14, Point),
         (agg, match) => new PickOverUnderFromPreviousMatchesBetweenTwoTeamsDateRange(agg, match, 14, 23, Point),
         (agg, match) => new FlipPickOverUnderFromPreviousMatchesBetweenTwoTeamsDateRange(agg, match, 14, 24, Point),
         (agg, match) => new TakeAverageOverUnderMarkIntoConsiderationBetweenTwoTeams(agg, match, 27, Point, 14, MarkUsing: MarkUsing)
